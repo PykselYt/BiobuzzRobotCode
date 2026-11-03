@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.PinPoint;
 public class Localizer {
 
 
-    public static double X = -191.839, Y = 180.213, yawScalar = 1;//de vazut
-    public static PinPoint.EncoderDirection xPod = PinPoint.EncoderDirection.REVERSED, yPod = PinPoint.EncoderDirection.FORWARD;
+    public static double X = -118.203, Y = -69.861, yawScalar = 1;//de vazut
+    public static PinPoint.EncoderDirection xPod = PinPoint.EncoderDirection.REVERSED, yPod = PinPoint.EncoderDirection.REVERSED;
     public static PinPoint pinPoint;
     private static SparkFunOTOS.Pose2D velocity = new SparkFunOTOS.Pose2D();
     public static SparkFunOTOS.Pose2D lastPose = new SparkFunOTOS.Pose2D();

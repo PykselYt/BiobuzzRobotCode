@@ -12,26 +12,13 @@ public class ShootAllSequence {
     public static Scheduler ShootTasks = new Scheduler()
             .addTask(new Task() {
                 @Override
-                protected void Actions() {
-                    storage.unlockPuta();
-                    ShooterCalculator.shouldCompensateHood = true;
-
-                }
-
-                @Override
-                protected boolean Conditions() {
-                    return true;
-                }
-            })
-            .addTask(new Task() {
-                @Override
                 protected void Actions()
                 {
 
                     //if(Localizer.getDistanceFromTwoPoints(Localizer.getCurrentPosition(), Turret.goalPosition) > 2500)
                     //    storage.takeinTransfer();
                     //else
-                    storage.takeIn();
+                    storage.transfer();
                 }
 
                 @Override
@@ -39,6 +26,21 @@ public class ShootAllSequence {
                     return true;
                 }
             })
+            .waitSeconds(0.1)
+            .addTask(new Task() {
+                @Override
+                protected void Actions() {
+                    storage.unlockPuta();
+                    //ShooterCalculator.shouldCompensateHood = true;
+
+                }
+
+                @Override
+                protected boolean Conditions() {
+                    return true;
+                }
+            })
+
             .waitSeconds(0.5)
             .addTask(new Task() {
                 @Override
@@ -56,7 +58,7 @@ public class ShootAllSequence {
                 @Override
                 protected void Actions() {
                     storage.stop();
-                    ShooterCalculator.shouldCompensateHood = false;
+                    //ShooterCalculator.shouldCompensateHood = false;
                 }
 
                 @Override

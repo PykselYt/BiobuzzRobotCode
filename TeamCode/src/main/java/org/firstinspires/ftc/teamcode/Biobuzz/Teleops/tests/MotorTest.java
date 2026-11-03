@@ -14,8 +14,6 @@ import java.util.ArrayList;
 public class MotorTest extends LinearOpMode {
     public static int motor = 0;
     public static double power = 0;
-    public static ServoTest.Hubs hub = ServoTest.Hubs.ControlHub;
-    public static ElapsedTime time = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,11 +22,8 @@ public class MotorTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            if(hub == ServoTest.Hubs.ControlHub){
-                RobotInitializers.ControlHubMotors.setMotorPower(motor, power);
-            }
-            else if(hub == ServoTest.Hubs.ExpansionHub)
-                RobotInitializers.ExpansionHubMotors.setMotorPower(motor, power);
+            RobotInitializers.ControlHubMotors.setMotorPower(motor, power);
+
 
 
 
@@ -40,16 +35,15 @@ public class MotorTest extends LinearOpMode {
                 //RobotInitializers.Dashtelemetry.addData("e" + i, RobotInitializers.ExpansionHubMotors.getMotorCurrentPosition(i));
 
                 //RobotInitializers.Dashtelemetry.addData("e vel" + i, RobotInitializers.ExpansionHubMotors.getMotorVelocity(i));
-                /*double raw_ticks_vel = RobotInitializers.ControlHubMotors.getMotorVelocity(i);
-                RobotInitializers.Dashtelemetry.addData("raw cv" + i, raw_ticks_vel);
-                RobotInitializers.Dashtelemetry.addData("crpm" + i, raw_ticks_vel / 33 * 60);*/
+                //double raw_ticks_vel = RobotInitializers.ControlHubMotors.getMotorVelocity(i);
+                //RobotInitializers.Dashtelemetry.addData("raw cv" + i, raw_ticks_vel);
+                //RobotInitializers.Dashtelemetry.addData("crpm" + i, raw_ticks_vel / 33 * 60);
 
                 //lastvalues.set(i,currentTicks);
             }
-            time.reset();
+
             RobotInitializers.clearCache();
 
-            //Localizer.Update();
             telemetry.update();
         }
     }

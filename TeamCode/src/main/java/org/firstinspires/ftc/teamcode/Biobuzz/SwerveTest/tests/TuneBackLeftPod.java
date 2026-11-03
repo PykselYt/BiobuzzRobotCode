@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
+import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Localizer;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.RobotInitializers;
 import org.firstinspires.ftc.teamcode.Biobuzz.SwerveTest.SwerveKinematics;
 import org.firstinspires.ftc.teamcode.Biobuzz.SwerveTest.SwervePod;
@@ -21,7 +22,7 @@ public class TuneBackLeftPod extends LinearOpMode {
         RobotInitializers.InitializeFull(hardwareMap);
 
         waitForStart();
-/*
+
         BP = SwerveKinematics.backLeftModule.bigCoef.p;
         BD = SwerveKinematics.backLeftModule.bigCoef.i;
         BF = SwerveKinematics.backLeftModule.bigCoef.d;
@@ -29,7 +30,7 @@ public class TuneBackLeftPod extends LinearOpMode {
         P = SwerveKinematics.backLeftModule.smallCoef.p;
         D = SwerveKinematics.backLeftModule.smallCoef.i;
         F = SwerveKinematics.backLeftModule.smallCoef.d;
-*/
+
         while (opModeIsActive()){
             RobotInitializers.clearCache();
 
@@ -42,6 +43,7 @@ public class TuneBackLeftPod extends LinearOpMode {
 
 
             SwerveKinematics.backLeftModule.update();
+            Localizer.Update();
 
             RobotInitializers.Dashtelemetry.addData("errorFromTarget",SwerveKinematics.backLeftModule.error(SwerveKinematics.backLeftModule.targetAngle,SwerveKinematics.backLeftModule.getAngle()));
             RobotInitializers.Dashtelemetry.addData("currentAngle",SwerveKinematics.backLeftModule.getAngle());

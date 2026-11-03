@@ -8,8 +8,10 @@ import static org.firstinspires.ftc.teamcode.Biobuzz.Teleops.TeleopsStarter.prev
 import static org.firstinspires.ftc.teamcode.Biobuzz.Teleops.TeleopsStarter.storage;
 
 import org.firstinspires.ftc.teamcode.Biobuzz.ActionsCommandLineImplementation.Scheduler;
+import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Chassis;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Localizer;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.ShooterCalculator;
+import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Storage;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Turret;
 import org.firstinspires.ftc.teamcode.Biobuzz.Teleops.TeleopsStarter;
 
@@ -32,27 +34,40 @@ public class MainHandler {
     public static boolean shouldUpdateStorage = false;
     public void ActionIntake()
     {
-        if((gm1.right_bumper && gm1.left_bumper) || (!gm1.right_bumper && !gm1.left_bumper)) {
-            storage.stop();
-            //rot = 1;
+        if(gm1.circle && gm1.circle!=prevgm1.circle){
+            storage.switchRamp();
         }
-        if(gm1.right_bumper) {
-            storage.takeIn();
-            //rot = 0.6;
+        if(gm1.right_bumper!= prevgm1.right_bumper || gm1.left_bumper!= prevgm1.left_bumper){
+            if(gm1.right_bumper && gm1.left_bumper) {
+                storage.stop();
+            }else if(gm1.right_bumper) {
+                storage.takeIn();
+            }
+            else if(gm1.left_bumper) {
+                storage.spit();
+            }
+            else {
+                storage.idle();
+            }
         }
-        else if(gm1.left_bumper) {
-            storage.spit();
-            //rot = 1;
-        }
+
     }
 
     public void update()
     {
+
         ActionIntake();
+
+        if(gm1.cross && gm1.cross != prevgm1.cross){
+            Localizer.Reset();
+            Chassis.kinematics.resetHoldHeading();
+        }
+
+
         if(prevgm1.square != gm1.square && gm1.square && tasks.IsSchedulerDone()){
             tasks.AddAnotherScheduler(ShootTasks);
         }
-
+        /*
         if(prevgm1.triangle != gm1.triangle && gm1.triangle){
             Localizer.setHeading(Math.toRadians(TeleopsStarter.resetPosition.h));
             Turret.ManualOffset=0;
@@ -121,8 +136,10 @@ public class MainHandler {
             ShooterCalculator.clampDistance = !ShooterCalculator.clampDistance;
 
 
-
+        */
         tasks.update();
+
+
     }
 
 

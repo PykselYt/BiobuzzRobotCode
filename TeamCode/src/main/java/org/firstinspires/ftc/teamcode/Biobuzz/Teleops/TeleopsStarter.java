@@ -25,7 +25,7 @@ public class TeleopsStarter {
     public static boolean ActivateTelemetry = true;
     public static double rot = 1;
     public static boolean reverse = false;
-    public static double AngleOffsetForDriving = 0;
+    public static double AngleOffsetForDriving = 180;
     public MainHandler mainHandler;
     public static Storage storage;
     public static Shooter shooter;
@@ -49,17 +49,19 @@ public class TeleopsStarter {
 
         RobotInitializers.InitializeFull(hardwareMap);
         RobotInitializers.disable();
-        //Camera.stopCamera();
 
         storage = new Storage();
-        shooter = new Shooter();
         turret = new Turret();
+
+        shooter = new Shooter();
+
 
         ShooterCalculator.shouldCompensateHood = true;
 
         ShooterCalculator.TurretOffsetStatic = 0;
 
         storage.lockPuta();
+
 
         mainHandler = new MainHandler();
         team = color;
@@ -70,8 +72,10 @@ public class TeleopsStarter {
     public void InitUpdate(){
         RobotInitializers.clearCache();
         Chassis.usedTrajectory=Chassis.trajectoryStates.USENOTHING;
-        ShooterCalculator.shouldCompensateHood = true;
-        shooter.UpdateTurretAndPitch();
+        Chassis.kinematics.resetHoldHeading();
+
+        //ShooterCalculator.shouldCompensateHood = true;
+        //shooter.UpdateTurretAndPitch();
 
         if(gm1.cross){
             DrivingFieldCentric = true;
@@ -86,38 +90,21 @@ public class TeleopsStarter {
 
         RobotInitializers.clearCache(ActivateTelemetry);
 
-        Chassis.drive(DrivingFieldCentric, gm1.left_stick_y, -gm1.left_stick_x, -gm1.right_stick_x * rot);
+        Chassis.drive(DrivingFieldCentric, -gm1.left_stick_x, -gm1.left_stick_y, (gm1.left_trigger - gm1.right_trigger) * rot);
 
         Chassis.Update();
 
 
         mainHandler.update();
 
-        if(!PinpointDown) {
-            //
-            // if(TurnTurretOn)
-            //shooter.FormulaCalculator.OffsetForTurretAuto(Shooter.FlyWheelEncoder.getRPM());
-            turret.updateTurret(Localizer.getCurrentPosition());
-            //RobotInitializers.Dashtelemetry.addData("IsStorageFull", storage.check3artefacts());
-            shooter.UpdateTurretAndPitch(); //20-30
-            shooter.updateFlyWheelSpeed(); //30-40
-        }
-        else
-        {
-            /*
-            shooter.updateFlyWheelSpeed();
-            shooter.SetTargetRPM(RPM);
-            double newHoodWhileCompensating =  shooter.FormulaCalculator.CompensateRPMSagWitchHood(shooter.RPMError(),hood, ShooterCalculator.RPMErrorHoodCompensation);
-            shooter.SetAngleToHood(newHoodWhileCompensating);
-            turret.setAngle(1.08+Math.toRadians(OffsetTurretD2));
-
-             */
-        }
 
 
-        //shooter.GenerateOffsetFromVelocity();
+
         Localizer.Update();
-        //RobotInitializers.Dashtelemetry.addData("bearing",aprilTagHandler.GetTeamTagBearing());
+        turret.updateTurret(Localizer.getCurrentPosition());
+        shooter.UpdateTurretAndPitch();
+        //shooter.updateFlyWheelSpeed();
+
         prevgm1.copy(gm1);
         prevgm2.copy(gm2);
     }

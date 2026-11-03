@@ -31,7 +31,7 @@ public class ReadPotentiometers extends LinearOpMode {
             RobotInitializers.clearCache();
 
             analog = new AnalogInput(RobotInitializers.ControlHubAnalog,port);
-            RobotInitializers.ControlHubServos.setServoPosition(ServoPort, angle / 355.f);
+            RobotInitializers.ServoHub2.setServoPosition(ServoPort, angle / 355.f);
 
             RobotInitializers.Dashtelemetry.addData("analogRead",analog.getVoltage());
 

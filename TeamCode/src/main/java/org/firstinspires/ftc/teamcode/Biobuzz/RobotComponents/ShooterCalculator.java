@@ -8,7 +8,7 @@ public class ShooterCalculator {
 
 
 
-    public static double FlywheelDiameter = 76.2;
+    public static double FlywheelDiameter = 0.0762;
 
     public static double PosMaxPitch = 80, LowestPitch =
             53.9;
@@ -16,8 +16,8 @@ public class ShooterCalculator {
 
     public static double TurretOffsetStatic = 0;
 
-    public static SparkFunOTOS.Pose2D goalPosition1 = new SparkFunOTOS.Pose2D(0,0,0), goalPosition2 = new SparkFunOTOS.Pose2D(0,0,0);
-    public static double halfFieldDist = 3000;
+    public static SparkFunOTOS.Pose2D goalPosition1 = new SparkFunOTOS.Pose2D(1200,-500,0), goalPosition2 = new SparkFunOTOS.Pose2D(2000,-500,0);
+    public static double halfFieldDist = 1600;
     public static boolean usedPos1 = true;
     public static double usedHood = 0;
 
@@ -117,6 +117,34 @@ public class ShooterCalculator {
     public static double minY = 0, maxY = 3000;
 
     public static boolean shouldCompensateHood = false;
+
+
+    public static double h = 1.5;
+    public static double alfa = 45;
+    public static double k = 2;
+    public static double miu = 0.7;
+
+    public ShootData CalculateFormula(double ErrorRPM){
+        double X = Localizer.getCurrentPosition().x;
+        double Y = Localizer.getCurrentPosition().y;
+
+        double dx = Turret.goalPosition.x - X;
+        double dy = Turret.goalPosition.y - Y;
+
+        double distanceToGoal = Math.hypot(dx, dy) / 1000;
+
+        double hood_angle = Math.atan((2 * h / distanceToGoal) + Math.tan(Math.toRadians(alfa)));
+        double ball_speed = distanceToGoal / Math.cos(hood_angle) * Math.sqrt(g / (2 * ((distanceToGoal * Math.tan(hood_angle) - h))));
+        double flywheelRPM = (k * ball_speed * 60) / (miu * Math.PI * FlywheelDiameter);
+
+        double newHoodWhileCompensating = Math.toDegrees(hood_angle);
+
+        if(shouldCompensateHood)newHoodWhileCompensating =  CompensateRPMSagWitchHood(ErrorRPM,Math.toDegrees(hood_angle),RPMErrorHoodCompensation);
+
+        //TurretOffsetStatic = TurretOffsetMultiplier * OffsetTurret;
+
+        return new ShootData(newHoodWhileCompensating,0,flywheelRPM);
+    }
 
     public ShootData CalculateShootData(double ErrorRPM){
 

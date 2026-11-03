@@ -13,16 +13,20 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 
 
 @ServoType(flavor = ServoFlavor.CUSTOM)
-@DeviceProperties(name = "ServoPlus", xmlTag = "servoPlus")
-public class CrServoPlus extends CRServoImpl implements CRServo, HardwareDevice {
+@DeviceProperties(name = "CRServoPlus", xmlTag = "CrservoPlus")
+public class CrServoPlus extends ServoImpl implements Servo, HardwareDevice {
 
-    public CrServoPlus(ServoController controller, int portNumber, DcMotorSimple.Direction direction) {
+    public CrServoPlus(ServoController controller, int portNumber, Direction direction) {
         super(controller, portNumber, direction);
     }
     public CrServoPlus(ServoController controller, int portNumber) {
         super(controller, portNumber);
     }
-    public CrServoPlus(CRServo s){
+    public CrServoPlus(Servo s){
         super(s.getController(), s.getPortNumber(), s.getDirection());
+    }
+
+    public synchronized void setPower(double val){
+        setPosition((val+1.0)/2.0);
     }
 }

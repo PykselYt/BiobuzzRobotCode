@@ -31,6 +31,7 @@ public class TeleOp1 extends LinearOpMode {
             TeleopsStarter.gm1.copy(gamepad1);
             TeleopsStarter.gm2.copy(gamepad2);
             opmode.update();
+            RobotInitializers.Dashtelemetry.update();
 
         }
     }

@@ -1,28 +1,30 @@
 package org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+@Config
 public class Turret {
 
 
 
-    public static double AngleOffsetFrom0 = 83.5;
-    public static double BreathRoomPos = 0.02;
-    public static double OppositionPos = 0.02;
+    public static double AngleOffsetFrom0 = 92;
+    public static double BreathRoomPos = 0;
+    public static double OppositionPos = 0;
 
     public static double ManualOffset = 0;
 
-    public static double RotationalVelocityTurretCompensator = -0.08;
+    public static double RotationalVelocityTurretCompensator = -0.1;
 //    public static SparkFunOTOS.Pose2D goalPosition = new SparkFunOTOS.Pose2D(1437,3200,0);
 
-    public static SparkFunOTOS.Pose2D goalPosition;
+    public static SparkFunOTOS.Pose2D goalPosition = new SparkFunOTOS.Pose2D(1200,-500,0);
     public static double MaxAngle = 355;
 
-    public static ServoImplEx mk21;
+    public static ServoImplEx mk21, mk22;
     public static AnalogInput TurretRawPosition;
     private static double INV_MAX_ANGLE_RAD =
             1.0 / Math.toRadians(MaxAngle);
@@ -33,13 +35,13 @@ public class Turret {
         ShooterCalculator.TurretOffsetStatic = 0;
 
         mk21.setPwmRange(new PwmControl.PwmRange(500 , 2500));
-        //mk22.setPwmRange(new PwmControl.PwmRange(500 , 2500));
+        mk22.setPwmRange(new PwmControl.PwmRange(500 , 2500));
 
         mk21.setDirection(Servo.Direction.FORWARD);
-        //mk22.setDirection(Servo.Direction.FORWARD);
+        mk22.setDirection(Servo.Direction.REVERSE);
     }
-    public static double offsetTurretX = -0.323;
-    public static double offsetTurretY = -79.136;
+    public static double offsetTurretX = 0;
+    public static double offsetTurretY = 29.952;
 
     public static double offsetH = 0;
 
@@ -133,7 +135,8 @@ public class Turret {
         setAngle(ShouldHaveTurretHeading);
 
     }
-    private double angleCached = 1000;
+
+    private static double pp1 = 0, pp2 = 0;
 
     public void setAngle(double angle){
         //RobotInitializers.Dashtelemetry.addData("angle",angle);
@@ -144,13 +147,23 @@ public class Turret {
         if(angle == angleCached) return; // Cacheing
         angleCached = angle;*/
         double anglenorm = angle * INV_MAX_ANGLE_RAD;
-        mk21.setPosition(Math.max(BreathRoomPos, Math.min(1 - BreathRoomPos, (1 - anglenorm) + OppositionPos)));
-        //mk22.setPosition(Math.max(BreathRoomPos, Math.min(1 - BreathRoomPos, (1 - anglenorm) - OppositionPos)));
+        double p1 = Math.max(BreathRoomPos, Math.min(1 - BreathRoomPos, (anglenorm) + OppositionPos));
+        double p2 = Math.max(BreathRoomPos, Math.min(1 - BreathRoomPos, (anglenorm) - OppositionPos));
+
+        if(p1 != pp1 || p2 != pp2){
+            pp1 = p1;
+            pp2 = p2;
+
+            mk21.setPosition(p1);
+            mk22.setPosition(p2);
+        }
+
+
     }
 
     public void setAngleToInit(double val){
         mk21.setPosition(val);
-        //mk22.setPosition(val);
+        mk22.setPosition(val);
     }
 
 

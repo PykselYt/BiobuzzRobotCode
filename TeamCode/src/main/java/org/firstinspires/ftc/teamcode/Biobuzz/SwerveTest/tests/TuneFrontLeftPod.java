@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
+import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Localizer;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.RobotInitializers;
 import org.firstinspires.ftc.teamcode.Biobuzz.SwerveTest.SwerveKinematics;
 
@@ -39,7 +40,7 @@ public class TuneFrontLeftPod extends LinearOpMode {
 
 
             SwerveKinematics.frontLeftModule.update();
-
+            Localizer.Update();
             RobotInitializers.Dashtelemetry.addData("errorFromTarget",SwerveKinematics.frontLeftModule.error(SwerveKinematics.frontLeftModule.targetAngle,SwerveKinematics.frontLeftModule.getAngle()));
             RobotInitializers.Dashtelemetry.addData("currentAngle",SwerveKinematics.frontLeftModule.getAngle());
 

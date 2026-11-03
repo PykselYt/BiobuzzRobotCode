@@ -112,6 +112,18 @@ public class Chassis {
     }
 
     public static void drive(boolean fc, double x, double y, double z){
+        /*
+        double mag = Math.hypot(x, y);
+        if(mag < 0.05) { x = 0; y = 0; }
+        else{
+            double scale = Math.min(mag, 1);
+            x*=scale;
+            y*=scale;
+        }
+        if(Math.abs(z) < 0.05) z = 0;
+        z = z * Math.abs(z);
+        */
+
         if(fc){
             kinematics.setFC(x, y, z);
         }

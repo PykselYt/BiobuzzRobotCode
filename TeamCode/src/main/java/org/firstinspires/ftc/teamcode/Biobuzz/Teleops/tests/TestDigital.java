@@ -23,7 +23,6 @@ public class TestDigital extends LinearOpMode {
             for(int i=0;i<8;i++)
             {
                 RobotInitializers.Dashtelemetry.addData("c" + i + " ", RobotInitializers.ControlHubDigital.getDigitalChannelState(i));
-                RobotInitializers.Dashtelemetry.addData("e" + i + " ", RobotInitializers.ExpansionHubDigital.getDigitalChannelState(i));
             }
         }
     }

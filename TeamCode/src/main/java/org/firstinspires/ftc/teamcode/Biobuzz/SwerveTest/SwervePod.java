@@ -12,10 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.RobotInitializers;
 import org.firstinspires.ftc.teamcode.Biobuzz.SwerveTest.EfficientPDFController;
 import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.CachedMotor;
+import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.CrServoPlus;
 
 public class SwervePod {
 
-    public CachedMotor motor;
+    public CrServoPlus motor;
     public CRServoImplEx servo;
     public AnalogInput encoder;
 
@@ -28,13 +29,16 @@ public class SwervePod {
     public double motorPower;
 
     public EfficientPDFController controller;
+    // smallCoef = cand |eroare| <= 4 grade (aproape de tinta)
+    // bigCoef   = cand |eroare| >  4 grade (departe de tinta)
+    // Format: new PIDCoefficients(P, D, F)  -> campul .i tine D, campul .d tine F
     public PIDCoefficients bigCoef = new PIDCoefficients(0,0,0), smallCoef=new PIDCoefficients(0,0,0);
     boolean usingSmallCoef = false;
 
     private double Offset = 0;
     private final boolean reverseServo;
 
-    public SwervePod(CachedMotor motorInstance, CRServoImplEx CRServoInstance, AnalogInput analogInstance, boolean reverseServo) {
+    public SwervePod(CrServoPlus motorInstance, CRServoImplEx CRServoInstance, AnalogInput analogInstance, boolean reverseServo) {
         this.servo = CRServoInstance;
         this.encoder = analogInstance;
         this.motor = motorInstance;
@@ -54,7 +58,7 @@ public class SwervePod {
         double reverseAngle = normalize(angle + 180);
         double reverseError = error(reverseAngle, current);
 
-        RobotLog.ii("intrat in set", String.valueOf(power));
+        // FIX: RobotLog.ii scria in logcat la fiecare apel (4 poduri x fiecare loop) -> scade mult FPS-ul.
 
         if (Math.abs(reverseError) < Math.abs(normalError)) {
             targetAngle = reverseAngle;
@@ -74,11 +78,12 @@ public class SwervePod {
 
         double error = getError();
 
-        if(error > 4 ){
+        // FIX: inainte era "error > 4" (cu semn) si smallCoef se folosea pe eroare MARE.
+        // Acum: smallCoef cand |eroare| <= 4, bigCoef cand |eroare| > 4, simetric pe ambele sensuri.
+        if (Math.abs(error) <= 4) {
             usingSmallCoef = true;
             controller.setPDFCoefficients(smallCoef.p, smallCoef.i, smallCoef.d);
-        }
-        if(error <= 4 ){
+        } else {
             usingSmallCoef = false;
             controller.setPDFCoefficients(bigCoef.p, bigCoef.i, bigCoef.d);
         }

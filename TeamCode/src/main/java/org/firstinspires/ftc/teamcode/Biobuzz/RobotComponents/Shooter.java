@@ -44,7 +44,9 @@ public class Shooter {
             new PIDCoefficients(0.0006, 0, 0);
 
     public void updateFlyWheelSpeed(){
+        Launcher1.setPower(0.85);
 
+        /*
         LauncherSpeedController.setPidCoefficients(
                 RPMError(300) ? SOFT_PID : AGGR_PID);
 
@@ -59,6 +61,8 @@ public class Shooter {
         double LaunchSpeed = LauncherSpeedController.calculatePower(rpm);
         LaunchSpeed += Kv * LauncherSpeedController.getTargetPosition() + Math.signum(LauncherSpeedController.getTargetPosition() - rpm) * Fs;
         setPowerEquilibrated(LaunchSpeed);
+
+         */
     }
 
     public double lastPos = 0.5;
@@ -66,11 +70,12 @@ public class Shooter {
 
     public void UpdateTurretAndPitch(){
 
-        ShooterCalculator.ShootData data = FormulaCalculator.CalculateShootData(RPMError());
+        //ShooterCalculator.ShootData data = FormulaCalculator.CalculateFormula(RPMError());
 
-        SetTargetRPM(data.wheelRPM);
+        //SetTargetRPM(data.wheelRPM);
         if(!Storage.putaBlock){
-            Pitch.setAngle(FormulaCalculator.NeededServoPosForPitchGiven(data.hoodAngleDegrees));
+            //Pitch.setAngle(FormulaCalculator.NeededServoPosForPitchGiven(data.hoodAngleDegrees));
+            Pitch.setAngle(150);
         }else{
             Pitch.setAngle(Storage.blockPos);
         }

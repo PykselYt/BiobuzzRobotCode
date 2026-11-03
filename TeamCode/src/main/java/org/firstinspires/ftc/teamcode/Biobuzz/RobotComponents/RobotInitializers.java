@@ -10,10 +10,13 @@ import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
+import com.qualcomm.robotcore.hardware.DigitalChannelImpl;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoControllerEx;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
@@ -25,7 +28,10 @@ import org.firstinspires.ftc.teamcode.Biobuzz.MathHelpers.ExtendedMaths;
 import org.firstinspires.ftc.teamcode.Biobuzz.SwerveTest.SwerveKinematics;
 import org.firstinspires.ftc.teamcode.Biobuzz.SwerveTest.SwervePod;
 import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.CachedMotor;
+import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.CrServoPlus;
 import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.MonoChromeGlobalShutterCamera;
+import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.ServoPlus;
+
 import java.util.List;
 
 @Config
@@ -34,11 +40,11 @@ public class RobotInitializers {
 
     public static Telemetry Dashtelemetry;
     public static IMU imu;
-    public static DcMotorControllerEx ControlHubMotors, ExpansionHubMotors;
-    public static ServoControllerEx ControlHubServos, ExpansionHubServos, ServoHub;
-    public static DigitalChannelController ControlHubDigital,ExpansionHubDigital;
+    public static DcMotorControllerEx ControlHubMotors;
+    public static ServoControllerEx ControlHubServos, ServoHub1, ServoHub2;
+    public static DigitalChannelController ControlHubDigital;
 
-    public static AnalogInputController ControlHubAnalog,ExpansionHubAnalog;
+    public static AnalogInputController ControlHubAnalog;
     public static MonoChromeGlobalShutterCamera camera;
     public static double VOLTAGE = 12;
     public static boolean isDisabled(){
@@ -69,21 +75,21 @@ public class RobotInitializers {
 //            disable();
 
         ControlHubMotors = hm.get(DcMotorControllerEx.class, "Control Hub");
-        //ExpansionHubMotors = hm.get(DcMotorControllerEx.class, "Expansion Hub 2");
+
         RobotLog.i("Motors initialized");
         ControlHubServos = hm.get(ServoControllerEx.class, "Control Hub");
-        //ExpansionHubServos = hm.get(ServoControllerEx.class, "Expansion Hub 2");
+
         RobotLog.i("Servos (chub ehub) initialized");
         ControlHubDigital = hm.get(DigitalChannelController.class,"Control Hub");
-        //ExpansionHubDigital = hm.get(DigitalChannelController.class,"Expansion Hub 2");
+
         RobotLog.i("Digital initialized");
         ControlHubAnalog = hm.get(AnalogInputController.class,"Control Hub");
-        //ExpansionHubAnalog = hm.get(AnalogInputController.class,"Expansion Hub 2");
+
         RobotLog.i("Analog initialized");
 
-        ServoHub = hm.get(ServoControllerEx.class,"Servo Hub 1");
+        ServoHub1 = hm.get(ServoControllerEx.class,"Servo Hub 1");
+        ServoHub2 = hm.get(ServoControllerEx.class,"Servo Hub 3");
 
-        //IMUBNO085.controller = hm.get(DigitalChannelController.class, "Expansion Hub 1");
 
         MotorConfigurationType mct;
 
@@ -148,6 +154,9 @@ public class RobotInitializers {
         InitializeHubs(hm, true);
         Localizer.Initialize(hm);
         InitializeChassis();
+        InitializeStorage();
+        InitializeTurret();
+        InitializeShooter();
         ExtendedMaths.InitializeMathematics();
 
     }
@@ -155,44 +164,80 @@ public class RobotInitializers {
 
     public static void InitializeChassis(){
 
-        SwerveKinematics.backRightModule = new SwervePod(new CachedMotor(ControlHubMotors,0 , DcMotorSimple.Direction.REVERSE),
-                new CRServoImplEx(ServoHub,3, ServoConfigurationType.getStandardServoType()),
-                new AnalogInput(ControlHubAnalog,2),true);
-
-        SwerveKinematics.backRightModule.SetEncoderOffset(-55);
-        SwerveKinematics.backRightModule.bigCoef = new PIDCoefficients(-0.0175, -0.00065, 0);
-        SwerveKinematics.backRightModule.smallCoef = new PIDCoefficients(-0.0175, -0.00065, 0);
-        SwerveKinematics.backRightModule.controller.setPDFCoefficients(-0.0175, -0.00065, 0);
-
-
-        SwerveKinematics.frontRightModule = new SwervePod(new CachedMotor(ControlHubMotors,1, DcMotorSimple.Direction.REVERSE),
-                new CRServoImplEx(ServoHub,4, ServoConfigurationType.getStandardServoType()),
-                new AnalogInput(ControlHubAnalog,3),true);
-
-        SwerveKinematics.frontRightModule.SetEncoderOffset(3);
-        SwerveKinematics.frontRightModule.bigCoef = new PIDCoefficients(-0.0175, -0.0007, 0);
-        SwerveKinematics.frontRightModule.smallCoef = new PIDCoefficients(-0.0175, -0.0007, 0);
-        SwerveKinematics.frontRightModule.controller.setPDFCoefficients(-0.0175, -0.0007, 0);
-
-        SwerveKinematics.backLeftModule = new SwervePod(new CachedMotor(ControlHubMotors,2, DcMotorSimple.Direction.FORWARD),
-                new CRServoImplEx(ServoHub,1, ServoConfigurationType.getStandardServoType()),
-                new AnalogInput(ControlHubAnalog,0),true);
-
-        SwerveKinematics.backLeftModule.SetEncoderOffset(117);
-        SwerveKinematics.backLeftModule.bigCoef = new PIDCoefficients(-0.0166,-0.00071,0);
-        SwerveKinematics.backLeftModule.smallCoef = new PIDCoefficients(-0.0166,-0.00071,0);
-        SwerveKinematics.backLeftModule.controller.setPDFCoefficients(-0.0166, -0.00071, 0);
-
-
-        SwerveKinematics.frontLeftModule = new SwervePod(new CachedMotor(ControlHubMotors,3, DcMotorSimple.Direction.REVERSE),
-                new CRServoImplEx(ServoHub,2, ServoConfigurationType.getStandardServoType()),
+        SwerveKinematics.backRightModule = new SwervePod(new CrServoPlus(ServoHub2,4 , Servo.Direction.FORWARD),
+                new CRServoImplEx(ServoHub1,1, ServoConfigurationType.getStandardServoType()),
                 new AnalogInput(ControlHubAnalog,1),true);
 
-        SwerveKinematics.frontLeftModule.SetEncoderOffset(45);
-        SwerveKinematics.frontLeftModule.bigCoef = new PIDCoefficients(-0.0175, -0.00065, 0);
-        SwerveKinematics.frontLeftModule.smallCoef = new PIDCoefficients(-0.0175, -0.00065, 0);
-        SwerveKinematics.frontLeftModule.controller.setPDFCoefficients(-0.0175, -0.00065, 0);
+        SwerveKinematics.backRightModule.SetEncoderOffset(-140);
+        SwerveKinematics.backRightModule.bigCoef = new PIDCoefficients(-0.013911, -0.0006935, 0);
+        SwerveKinematics.backRightModule.smallCoef = new PIDCoefficients(-0.033042, -0.0007288, 0);
+        SwerveKinematics.backRightModule.controller.setPDFCoefficients(-0.013911, -0.0006935, 0);
+
+
+        SwerveKinematics.frontRightModule = new SwervePod(new CrServoPlus(ServoHub2,5, Servo.Direction.FORWARD),
+                new CRServoImplEx(ServoHub1,0, ServoConfigurationType.getStandardServoType()),
+                new AnalogInput(ControlHubAnalog,0),true);
+
+        SwerveKinematics.frontRightModule.SetEncoderOffset(-170);
+        SwerveKinematics.frontRightModule.bigCoef = new PIDCoefficients(-0.012119, -0.0002491, 0);
+        SwerveKinematics.frontRightModule.smallCoef = new PIDCoefficients(-0.024703, -0.0003542, 0);
+        SwerveKinematics.frontRightModule.controller.setPDFCoefficients(-0.012119, -0.0002491, 0);
+
+        SwerveKinematics.backLeftModule = new SwervePod(new CrServoPlus(ServoHub2,3, Servo.Direction.FORWARD),
+                new CRServoImplEx(ServoHub2,1, ServoConfigurationType.getStandardServoType()),
+                new AnalogInput(ControlHubAnalog,2),true);
+
+        SwerveKinematics.backLeftModule.SetEncoderOffset(55);
+        SwerveKinematics.backLeftModule.bigCoef = new PIDCoefficients(-0.017070,-0.0006128,0);
+        SwerveKinematics.backLeftModule.smallCoef = new PIDCoefficients(-0.025105,-0.0005812,0);
+        SwerveKinematics.backLeftModule.controller.setPDFCoefficients(-0.017070,-0.0006128,0);
+
+
+        SwerveKinematics.frontLeftModule = new SwervePod(new CrServoPlus(ServoHub2,2, Servo.Direction.REVERSE),
+                new CRServoImplEx(ServoHub2,0, ServoConfigurationType.getStandardServoType()),
+                new AnalogInput(ControlHubAnalog,3),true);
+
+        SwerveKinematics.frontLeftModule.SetEncoderOffset(-72);
+        SwerveKinematics.frontLeftModule.bigCoef = new PIDCoefficients(-0.017744, -0.0004858, 0);
+        SwerveKinematics.frontLeftModule.smallCoef = new PIDCoefficients(-0.028317, -0.0004159, 0);
+        SwerveKinematics.frontLeftModule.controller.setPDFCoefficients(-0.017744, -0.0004858, 0);
     }
+
+
+    public static void InitializeStorage(){
+        Storage.motorfata = new CachedMotor(ControlHubMotors, 0, DcMotorSimple.Direction.FORWARD);
+        Storage.motorspate = new CachedMotor(ControlHubMotors, 1, DcMotorSimple.Direction.FORWARD);
+        Storage.ramp = new ServoPlus(ServoHub1, 4);
+        Storage.upPos = 15;
+        Storage.downPos = 270;
+        Storage.ramp.setAngle(Storage.upPos);
+
+        Storage.bb1 = new DigitalChannelImpl(ControlHubDigital, 1);
+        Storage.bb2 = new DigitalChannelImpl(ControlHubDigital, 5);
+        Storage.bb3 = new DigitalChannelImpl(ControlHubDigital, 3);
+        Storage.bb4 = new DigitalChannelImpl(ControlHubDigital, 7);
+    }
+
+    public static void InitializeTurret(){
+        Turret.mk21 = new ServoImplEx(ServoHub1, 2,ServoConfigurationType.getStandardServoType());
+        Turret.mk22 = new ServoImplEx(ServoHub1, 5,ServoConfigurationType.getStandardServoType());
+    }
+
+    public static void InitializeShooter(){
+        Shooter.Launcher1 = new CachedMotor(ControlHubMotors, 2, DcMotorSimple.Direction.FORWARD);
+        Shooter.Pitch = new ServoPlus(ServoHub1, 3, Servo.Direction.FORWARD);
+    }
+
+    //Intake CHM0 --
+    //Storage CHM1 FORWARD
+    //Flywheel1 CHM2 FORWARD
+    //Flywheel2 CHM3 REVERSE
+
+    //Pitch SH1 3
+    //Turret1 SH1 2
+    //Turret2 SH1 5
+    //
+    //Ramp SH1 4 : 15 up : 275 down
 
 
 }
