@@ -141,7 +141,7 @@ public class SwerveKinematics {
     }
 
 
-    public void resetHoldHeading(){targetHeading = Localizer.getCurrentPosition().h;}
+    public void resetHoldHeading(){targetHeading = 0;}
     public void setFC(double x, double y, double r){
 
 

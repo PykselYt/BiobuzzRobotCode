@@ -13,7 +13,7 @@ public class Turret {
 
 
     public static double AngleOffsetFrom0 = 92;
-    public static double BreathRoomPos = 0;
+    public static double BreathRoomPos = 0.02;
     public static double OppositionPos = 0;
 
     public static double ManualOffset = 0;

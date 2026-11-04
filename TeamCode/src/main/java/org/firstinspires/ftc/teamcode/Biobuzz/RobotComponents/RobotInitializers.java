@@ -164,11 +164,11 @@ public class RobotInitializers {
 
     public static void InitializeChassis(){
 
-        SwerveKinematics.backRightModule = new SwervePod(new CrServoPlus(ServoHub2,4 , Servo.Direction.FORWARD),
+        SwerveKinematics.backRightModule = new SwervePod(new CrServoPlus(ServoHub2,4 , Servo.Direction.REVERSE),
                 new CRServoImplEx(ServoHub1,1, ServoConfigurationType.getStandardServoType()),
-                new AnalogInput(ControlHubAnalog,1),true);
+                new AnalogInput(ControlHubAnalog,0),true);
 
-        SwerveKinematics.backRightModule.SetEncoderOffset(-140);
+        SwerveKinematics.backRightModule.SetEncoderOffset(80);
         SwerveKinematics.backRightModule.bigCoef = new PIDCoefficients(-0.013911, -0.0006935, 0);
         SwerveKinematics.backRightModule.smallCoef = new PIDCoefficients(-0.033042, -0.0007288, 0);
         SwerveKinematics.backRightModule.controller.setPDFCoefficients(-0.013911, -0.0006935, 0);
@@ -176,16 +176,16 @@ public class RobotInitializers {
 
         SwerveKinematics.frontRightModule = new SwervePod(new CrServoPlus(ServoHub2,5, Servo.Direction.FORWARD),
                 new CRServoImplEx(ServoHub1,0, ServoConfigurationType.getStandardServoType()),
-                new AnalogInput(ControlHubAnalog,0),true);
+                new AnalogInput(ControlHubAnalog,1),true);
 
-        SwerveKinematics.frontRightModule.SetEncoderOffset(-170);
+        SwerveKinematics.frontRightModule.SetEncoderOffset(-165);
         SwerveKinematics.frontRightModule.bigCoef = new PIDCoefficients(-0.012119, -0.0002491, 0);
         SwerveKinematics.frontRightModule.smallCoef = new PIDCoefficients(-0.024703, -0.0003542, 0);
         SwerveKinematics.frontRightModule.controller.setPDFCoefficients(-0.012119, -0.0002491, 0);
 
         SwerveKinematics.backLeftModule = new SwervePod(new CrServoPlus(ServoHub2,3, Servo.Direction.FORWARD),
-                new CRServoImplEx(ServoHub2,1, ServoConfigurationType.getStandardServoType()),
-                new AnalogInput(ControlHubAnalog,2),true);
+                new CRServoImplEx(ServoHub2,0, ServoConfigurationType.getStandardServoType()),
+                new AnalogInput(ControlHubAnalog,3),true);
 
         SwerveKinematics.backLeftModule.SetEncoderOffset(55);
         SwerveKinematics.backLeftModule.bigCoef = new PIDCoefficients(-0.017070,-0.0006128,0);
@@ -193,11 +193,11 @@ public class RobotInitializers {
         SwerveKinematics.backLeftModule.controller.setPDFCoefficients(-0.017070,-0.0006128,0);
 
 
-        SwerveKinematics.frontLeftModule = new SwervePod(new CrServoPlus(ServoHub2,2, Servo.Direction.REVERSE),
-                new CRServoImplEx(ServoHub2,0, ServoConfigurationType.getStandardServoType()),
-                new AnalogInput(ControlHubAnalog,3),true);
+        SwerveKinematics.frontLeftModule = new SwervePod(new CrServoPlus(ServoHub2,2, Servo.Direction.FORWARD),
+                new CRServoImplEx(ServoHub2,1, ServoConfigurationType.getStandardServoType()),
+                new AnalogInput(ControlHubAnalog,2),true);
 
-        SwerveKinematics.frontLeftModule.SetEncoderOffset(-72);
+        SwerveKinematics.frontLeftModule.SetEncoderOffset(108);
         SwerveKinematics.frontLeftModule.bigCoef = new PIDCoefficients(-0.017744, -0.0004858, 0);
         SwerveKinematics.frontLeftModule.smallCoef = new PIDCoefficients(-0.028317, -0.0004159, 0);
         SwerveKinematics.frontLeftModule.controller.setPDFCoefficients(-0.017744, -0.0004858, 0);
