@@ -23,7 +23,7 @@ public class TeleopsStarter {
     public static Gamepad gm2;
 
     public static boolean ActivateTelemetry = true;
-    public static double rot = 1;
+    public static double rotMult = 1, speedMult = 1;
     public static boolean reverse = false;
     public static double AngleOffsetForDriving = 180;
     public MainHandler mainHandler;
@@ -90,7 +90,7 @@ public class TeleopsStarter {
 
         RobotInitializers.clearCache(ActivateTelemetry);
 
-        Chassis.drive(DrivingFieldCentric, -gm1.left_stick_x, -gm1.left_stick_y, (gm1.left_trigger - gm1.right_trigger) * rot);
+        Chassis.drive(DrivingFieldCentric, -gm1.left_stick_x * speedMult, -gm1.left_stick_y * speedMult, (gm1.left_trigger - gm1.right_trigger) * rotMult);
 
         Chassis.Update();
 
@@ -103,7 +103,8 @@ public class TeleopsStarter {
         Localizer.Update();
         turret.updateTurret(Localizer.getCurrentPosition());
         shooter.UpdateTurretAndPitch();
-        //shooter.updateFlyWheelSpeed();
+        shooter.updateFlyWheelSpeed();
+        RobotInitializers.Dashtelemetry.addData("pin freq", Localizer.pinPoint.getFrequency());
 
         prevgm1.copy(gm1);
         prevgm2.copy(gm2);

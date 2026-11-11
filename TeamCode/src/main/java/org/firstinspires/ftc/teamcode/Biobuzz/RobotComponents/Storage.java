@@ -12,11 +12,11 @@ public class Storage {
 
     public static DigitalChannel bb1, bb2, bb3, bb4;
 
-    public static double upPos=15, downPos=275;
+    public static double upPos=100, downPos=275;
     private static boolean rampDown = false;
 
     public static boolean putaBlock = true;
-    public static double blockPos = 355;
+    public static double blockPos = 190;
 
     public void takeIn(double power){
         motorfata.setPower(power);

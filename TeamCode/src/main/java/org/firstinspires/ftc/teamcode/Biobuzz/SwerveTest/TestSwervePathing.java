@@ -34,6 +34,8 @@ public class TestSwervePathing extends LinearOpMode {
 
         RobotInitializers.InitializeFull(hardwareMap);
         Localizer.setPosition(new SparkFunOTOS.Pose2D(0, 0, 0));
+
+
         Scheduler tasks = new Scheduler()
                 .addTask(new Task() {
                     @Override
@@ -62,9 +64,9 @@ public class TestSwervePathing extends LinearOpMode {
         Scheduler currenttasks = new Scheduler();
         currenttasks.AddAnotherScheduler(tasks);
 
-        strafe = Chassis.Strafe.pidCoefficients;
-        forward = Chassis.Forward.pidCoefficients;
-        heading = Chassis.Heading.pidCoefficients;
+        //strafe = Chassis.Strafe.pidCoefficients;
+        //forward = Chassis.Forward.pidCoefficients;
+        //heading = Chassis.Heading.pidCoefficients;
 
         Chassis.usedTrajectory = Chassis.trajectoryStates.FREEWILL;
 
@@ -77,9 +79,9 @@ public class TestSwervePathing extends LinearOpMode {
         while(opModeIsActive())
         {
             h = Math.toRadians(hdeg);
-            //Chassis.Strafe.setPidCoefficients(strafe);
-            //Chassis.Forward.setPidCoefficients(forward);
-            //Chassis.Heading.setPidCoefficients(heading);
+            Chassis.Strafe.setPidCoefficients(strafe);
+            Chassis.Forward.setPidCoefficients(forward);
+            Chassis.Heading.setPidCoefficients(heading);
 
             currenttasks.update();
             if(currenttasks.IsSchedulerDone())

@@ -14,11 +14,8 @@ public class ShootAllSequence {
                 @Override
                 protected void Actions()
                 {
+                    storage.unlockPuta();
 
-                    //if(Localizer.getDistanceFromTwoPoints(Localizer.getCurrentPosition(), Turret.goalPosition) > 2500)
-                    //    storage.takeinTransfer();
-                    //else
-                    storage.transfer();
                 }
 
                 @Override
@@ -30,9 +27,7 @@ public class ShootAllSequence {
             .addTask(new Task() {
                 @Override
                 protected void Actions() {
-                    storage.unlockPuta();
-                    //ShooterCalculator.shouldCompensateHood = true;
-
+                    storage.transfer();
                 }
 
                 @Override
@@ -41,24 +36,23 @@ public class ShootAllSequence {
                 }
             })
 
-            .waitSeconds(0.5)
-            .addTask(new Task() {
-                @Override
-                protected void Actions() {
-                    storage.lockPuta();
-                }
-
-                @Override
-                protected boolean Conditions() {
-                    return true;
-                }
-            })
-            .waitSeconds(0.13)
+            .waitSeconds(0.7)
             .addTask(new Task() {
                 @Override
                 protected void Actions() {
                     storage.stop();
-                    //ShooterCalculator.shouldCompensateHood = false;
+                }
+
+                @Override
+                protected boolean Conditions() {
+                    return true;
+                }
+            })
+            .waitSeconds(0.2)
+            .addTask(new Task() {
+                @Override
+                protected void Actions() {
+                    storage.lockPuta();
                 }
 
                 @Override

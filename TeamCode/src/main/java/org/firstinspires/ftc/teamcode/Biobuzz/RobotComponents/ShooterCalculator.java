@@ -1,29 +1,31 @@
 package org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.teamcode.Biobuzz.MathHelpers.LinearFunction;
 
+@Config
 public class ShooterCalculator {
 
 
 
-    public static double FlywheelDiameter = 0.0762;
+    public static double FlywheelDiameter = 0.076;
 
-    public static double PosMaxPitch = 80, LowestPitch =
-            53.9;
-    public static double PosMinPitch = 320, HighestPitch = 28.6;
+    public static double PosMaxPitch = 340, LowestPitch = 58.2;
+    public static double PosMinPitch = 270, HighestPitch = 67;
 
     public static double TurretOffsetStatic = 0;
 
     public static SparkFunOTOS.Pose2D goalPosition1 = new SparkFunOTOS.Pose2D(1200,-500,0), goalPosition2 = new SparkFunOTOS.Pose2D(2000,-500,0);
     public static double halfFieldDist = 1600;
     public static boolean usedPos1 = true;
-    public static double usedHood = 0;
 
     public double NeededServoPosForPitchGiven(double pitch){
         double angle = LinearFunction.getOutput(PosMaxPitch,PosMinPitch,LowestPitch,HighestPitch,pitch);
-        return Math.max(PosMaxPitch,Math.min(angle,PosMinPitch));
+        double lo = Math.min(PosMinPitch, PosMaxPitch);
+        double hi = Math.max(PosMinPitch, PosMaxPitch);
+        return Math.max(lo, Math.min(angle, hi));
     }
 
     public double givePitch(double Angle){
@@ -39,27 +41,8 @@ public class ShooterCalculator {
         return rpm * Math.PI * FlywheelDiameter / 60.0;
     }
 
-    public static double TurretOffsetMultiplier = -2.9;
-    public static double CompensatedNewRPM = 0.4;
-    public static double CompensatorNewHood = 0;
-
-    public static double startangle = 41; // 56
-    public static double endangle = 29;
 
 
-    public static double startRPM = 2550;
-    public static double endRPM = 4100;
-
-    public static double startDist = 700;
-    public static double endDist = 3622;
-
-
-    public static double RPMErrorHoodCompensation = 0.01;
-
-
-
-    public static double manualHoodAddition = 0;
-    public static double manualRPMAddition = 0;
 
 
     public double CompensateRPMSagWitchHood(double ErrorRPM,double currHood,double modifier){
@@ -67,21 +50,9 @@ public class ShooterCalculator {
     }
 
 
-    public static double GetPrequisiteRPM(double dist){
-        return LinearFunction.getOutput(startRPM,endRPM,startDist,endDist,dist);
-
-
-        //return -0.0000461454 * Math.pow(dist,2) + 0.701809 * dist + 2285.76429;
-    }
-
-    public static double GetPrequisiteHood(double dist){
-        return LinearFunction.getOutput(startangle,endangle,startDist,endDist,dist);
-    }
-
-
-
     public static class ShootData{
         public double hoodAngleDegrees,YawOffset,wheelRPM;
+        public boolean canShoot = true;
         public ShootData(double hoodAngleDegrees,double YawOffset,double wheelRPM){
             this.hoodAngleDegrees = hoodAngleDegrees;
             this.YawOffset = YawOffset;
@@ -89,158 +60,93 @@ public class ShooterCalculator {
         }
     }
 
-    /*
-     *
-     * x = V*cos(a)*t => t = x / (V * cos(a))
-     * y = V*sin(a)*t - t^2 * g / 2
-     * y = V * sin(a) * x / (V * cos(a)) - x^2 / (V^2 * cos^2(a)) / 2
-     * y = x * tg(a) - x^2 / V^2 * (1 + tg^2(a))
-     * ...
-     * a = atan((V^2 - sqrt(V^4 - 2*V^2*g*y - g^2*x^2)) / (g * X))
-     *
-     *
-     *
-     * */
     private static final double g = 9.81;
-    public double CalculateHoodBasedOnVelocity(double shooterVelocity, double y, double x){
-        double delta = Math.pow(shooterVelocity, 4) - 2 * g * y * Math.pow(shooterVelocity, 2) - g * g * x * x;
-        if(delta < 0) return 0; // low rpm
-        double angle = Math.atan((shooterVelocity * shooterVelocity + Math.sqrt(delta)) / (g * x));
-
-        return angle;
-
-    }
-
-    public static boolean clampDistance = true;
-
-    public static double minX = 0, maxX = 3000;
-    public static double minY = 0, maxY = 3000;
-
     public static boolean shouldCompensateHood = false;
 
 
-    public static double h = 1.5;
-    public static double alfa = 45;
-    public static double k = 2;
-    public static double miu = 0.7;
+    public static double h = 1.27; //0.243
+    public static double alfa = -30;
+    public static double e = 0.765;
+
+    public static double lastValidRPM = 0;
+    public static double MaxFlywheelRPM = 3000;
 
     public ShootData CalculateFormula(double ErrorRPM){
-        double X = Localizer.getCurrentPosition().x;
-        double Y = Localizer.getCurrentPosition().y;
+        SparkFunOTOS.Pose2D pos = Localizer.getCurrentPosition();
 
-        double dx = Turret.goalPosition.x - X;
-        double dy = Turret.goalPosition.y - Y;
-
+        double dx = Turret.goalPosition.x - pos.x;
+        double dy = Turret.goalPosition.y - pos.y;
         double distanceToGoal = Math.hypot(dx, dy) / 1000;
 
-        double hood_angle = Math.atan((2 * h / distanceToGoal) + Math.tan(Math.toRadians(alfa)));
-        double ball_speed = distanceToGoal / Math.cos(hood_angle) * Math.sqrt(g / (2 * ((distanceToGoal * Math.tan(hood_angle) - h))));
-        double flywheelRPM = (k * ball_speed * 60) / (miu * Math.PI * FlywheelDiameter);
+        //unghi ideal
+        double thetaIdeal = Math.atan((2 * h / distanceToGoal) + Math.tan(Math.toRadians(alfa)));
 
-        double newHoodWhileCompensating = Math.toDegrees(hood_angle);
+        //clamp hood
+        double hood_angle = Math.max(Math.toRadians(LowestPitch),
+                Math.min(thetaIdeal, Math.toRadians(HighestPitch)));
+        boolean hoodAtLimit = hood_angle != thetaIdeal;
 
-        if(shouldCompensateHood)newHoodWhileCompensating =  CompensateRPMSagWitchHood(ErrorRPM,Math.toDegrees(hood_angle),RPMErrorHoodCompensation);
+        //rpm
+        double denom = distanceToGoal * Math.tan(hood_angle) - h;
+        boolean canShoot = denom > 0;
+        double flywheelRPM = lastValidRPM;
 
-        //TurretOffsetStatic = TurretOffsetMultiplier * OffsetTurret;
-
-        return new ShootData(newHoodWhileCompensating,0,flywheelRPM);
-    }
-
-    public ShootData CalculateShootData(double ErrorRPM){
-
-        double clampedX = Localizer.getCurrentPosition().x;
-        double clampedY = Localizer.getCurrentPosition().y;
-
-        if(clampDistance){
-            if(clampedX < minX) clampedX = minX;
-            if(clampedX > maxX) clampedX = maxX;
-
-            if(clampedY < minY) clampedY = minY;
-            if(clampedY > maxY) clampedY = maxY;
+        if (canShoot) {
+            double ball_speed = distanceToGoal / Math.cos(hood_angle) * Math.sqrt(g / (2 * denom));
+            flywheelRPM = (ball_speed * 60) / (e * Math.PI * FlywheelDiameter);
+            if (flywheelRPM > MaxFlywheelRPM) {
+                flywheelRPM = MaxFlywheelRPM;
+                canShoot = false;
+            }
+            lastValidRPM = flywheelRPM;
         }
 
+        //compensare
+        double newHood = Math.toDegrees(hood_angle);
+        if (shouldCompensateHood && canShoot) {
+            double measuredRPM = flywheelRPM - ErrorRPM;
+            newHood = CompensateHoodForRPM(measuredRPM, flywheelRPM, distanceToGoal, newHood);
+            newHood = Math.max(LowestPitch, Math.min(newHood, HighestPitch));
+        }
 
-        double dx = Turret.goalPosition.x - clampedX;
-        double dy = Turret.goalPosition.y - clampedY;
+        RobotInitializers.Dashtelemetry.addData("thetaIdeal", Math.toDegrees(thetaIdeal));
+        RobotInitializers.Dashtelemetry.addData("hoodAtLimit", hoodAtLimit);
+        RobotInitializers.Dashtelemetry.addData("canShoot", canShoot);
+        RobotInitializers.Dashtelemetry.addData("compensatedCalculatedHood", newHood);
 
-        double distanceToGoal = Math.hypot(dx, dy);
-
-        RobotInitializers.Dashtelemetry.addData("calculatedDistanceToGoal", distanceToGoal);
-
-        double hood_angle = Math.toRadians(GetPrequisiteHood(distanceToGoal) + manualHoodAddition);
-        double flywheelRPM = GetPrequisiteRPM(distanceToGoal) + manualRPMAddition;
-
-        /*if(distanceToGoal > DistanceToCancelCompensation){
-            double newHoodWhileCompensating =  CompensateRPMSagWitchHood(ErrorRPM,Math.toDegrees(hood_angle),RPMErrorHoodCompensation);
-            RobotInitializers.Dashtelemetry.addData("hood angle",newHoodWhileCompensating);
-            return new ShootData(newHoodWhileCompensating,0,flywheelRPM);
-        }*/
-
-        double v_ball = FromRPMToBallVelocity(flywheelRPM);
-
-        //RobotInitializers.Dashtelemetry.addData("flywheel normal",FromBallVelocityToRPM(v_ball));
-        //RobotInitializers.Dashtelemetry.addData("hood_angle",Math.toDegrees(hood_angle));
-
-        Localizer.VectorDescriptor vectorMotion = Localizer.GetVelocityVectorOfRobot();
-
-// Goal direction
-
-        double line = Math.atan2(dy, dx);
-
-        RobotInitializers.Dashtelemetry.addData("line",line);
-// Optional: Add an offset if needed (e.g., if robot forward is at 90 degrees)
-// double robotAngleOffset = Math.PI/2; // Example offset
-// double adjustedLine = line - robotAngleOffset;
-
-// Calculate components (without negative sign)
-        double delta = vectorMotion.orientation - line;
-
-        RobotInitializers.Dashtelemetry.addData("delta",delta);
-
-
-        double towardsComponent = -Math.cos(delta) * vectorMotion.value;
-        double sidewaysComponent = Math.sin(delta) * vectorMotion.value;
-
-        RobotInitializers.Dashtelemetry.addData("towardsComponent",towardsComponent);
-        RobotInitializers.Dashtelemetry.addData("sidewaysComponent",sidewaysComponent);
-
-        double vballcompensatedX = v_ball * Math.cos(hood_angle) + towardsComponent;
-
-        /*double newHood = hood_angle + -towardsComponent * CompensatorNewHood;
-        double newRPM = flywheelRPM + -towardsComponent * CompensatedNewRPM;
-
-        //double hoodCompensated = CompensateRPMSagWitchHood(ErrorRPM,Math.toDegrees(newHood),RPMErrorHoodCompensationWhileMoving);
-
-        /*double vballY = v_ball * Math.sin(hood_angle);
-
-        RobotInitializers.Dashtelemetry.addData("vballY = ", vballY);
-        RobotInitializers.Dashtelemetry.addData("vballcompensatedX = ", vballcompensatedX);
-
-        double timeFlight = distanceToGoal / (v_ball * Math.cos(hood_angle));
-
-        double hood_new = Math.atan( vballY / vballcompensatedX);
-
-        double VxBallElimCompensation = distanceToGoal / timeFlight + towardsComponent * ElimCompensatiorMultiplier;
-        double VyBall = v_ball * Math.sin(hood_new);
-
-        double NeededSlowedBall = Math.sqrt(VxBallElimCompensation * VxBallElimCompensation + VyBall * VyBall);
-        double newRPM = FromBallVelocityToRPM(NeededSlowedBall);*/
-
-        double OffsetTurret = Math.atan2(sidewaysComponent, vballcompensatedX);
-        double newHoodWhileCompensating = Math.toDegrees(hood_angle);
-
-        if(shouldCompensateHood)newHoodWhileCompensating =  CompensateRPMSagWitchHood(ErrorRPM,Math.toDegrees(hood_angle),RPMErrorHoodCompensation);
-
-
-
-
-        //RobotInitializers.Dashtelemetry.addData("Difference in RPM = ", newRPM - flywheelRPM);
-        //RobotInitializers.Dashtelemetry.addData("Difference in degrees hood", Math.toDegrees(newHood - hood_angle));
-
-        TurretOffsetStatic = TurretOffsetMultiplier * OffsetTurret;
-
-        return new ShootData(newHoodWhileCompensating,0,flywheelRPM);
+        ShootData data = new ShootData(newHood, 0, flywheelRPM);
+        data.canShoot = canShoot;
+        return data;
     }
+
+    public static double CompDeadbandRPM = 100;
+    public static double RPMFilterGain = 1;
+    private double filteredRPM = 0;
+
+    public double CompensateHoodForRPM(double measuredRPM, double targetRPM,
+                                       double distM, double nominalHoodDeg) {
+        filteredRPM += RPMFilterGain * (measuredRPM - filteredRPM);
+
+        if (Math.abs(targetRPM - filteredRPM) < CompDeadbandRPM) return nominalHoodDeg;
+
+        double v  = filteredRPM * e * Math.PI * FlywheelDiameter / 60.0;
+        double v2 = v * v;
+        double delta = v2 * v2 - g * (g * distM * distM + 2 * h * v2);
+
+        if (delta < 0) {
+            return Math.toDegrees(Math.PI / 4 + Math.atan2(h, distM) / 2);
+        }
+
+        double low  = Math.toDegrees(Math.atan((v2 - Math.sqrt(delta)) / (g * distM)));
+        double high = Math.toDegrees(Math.atan((v2 + Math.sqrt(delta)) / (g * distM)));
+
+        return Math.abs(low - nominalHoodDeg) < Math.abs(high - nominalHoodDeg) ? low : high;
+    }
+
+
+
+
+
 
     public SparkFunOTOS.Pose2D GetPredictedPosition(double distanceToGoal, double flywheelRPM, double hoodRad) {
         SparkFunOTOS.Pose2D currentPos = Localizer.getCurrentPosition();

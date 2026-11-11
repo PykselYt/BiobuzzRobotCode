@@ -22,8 +22,9 @@ import java.util.Arrays;
 public class TestSwervePurePersuit extends LinearOpMode {
 
     public static SparkFunOTOS.Pose2D PoseOne = new SparkFunOTOS.Pose2D(0,0,0),
-                                        PoseTwo = new SparkFunOTOS.Pose2D(0, 1000, Math.toRadians(-45)),
-                                        PoseThree = new SparkFunOTOS.Pose2D(1000, 1000, Math.toRadians(-90));
+                                        PoseTwo = new SparkFunOTOS.Pose2D(0, 1000, Math.toRadians(0)),
+                                        PoseThree = new SparkFunOTOS.Pose2D(2000, 1000, Math.toRadians(0)),
+                                        PoseFour = new SparkFunOTOS.Pose2D(2000, 2000, Math.toRadians(0));
 
     public static PIDCoefficients strafe= new PIDCoefficients(0,0,0);
     public static PIDCoefficients forward = new PIDCoefficients(0,0,0);
@@ -39,19 +40,22 @@ public class TestSwervePurePersuit extends LinearOpMode {
         heading = Chassis.Heading.pidCoefficients;
 
         ArrayList<PurePersuit.Point> purePersuitPathOne = new ArrayList<>(Arrays.asList(
-                new PurePersuit.Point(PoseOne.x, PoseOne.y, PoseOne.h, 0.5),
-                new PurePersuit.Point(PoseTwo.x, PoseTwo.y, PoseTwo.h, 0.5),
-                new PurePersuit.Point(PoseThree.x, PoseThree.y, PoseThree.h, 0.5)
+                new PurePersuit.Point(PoseOne.x, PoseOne.y, PoseOne.h, 0),
+                new PurePersuit.Point(PoseTwo.x, PoseTwo.y, PoseTwo.h, 0),
+                new PurePersuit.Point(PoseThree.x, PoseThree.y, PoseThree.h, 0),
+                new PurePersuit.Point(PoseFour.x, PoseFour.y, PoseFour.h, 0)
         ));
         ArrayList<PurePersuit.Point> purePersuitPathTwo = new ArrayList<>(Arrays.asList(
-                new PurePersuit.Point(PoseThree.x, PoseThree.y, PoseThree.h, 0.5),
-                new PurePersuit.Point(PoseTwo.x, PoseTwo.y, PoseTwo.h, 0.5),
-                new PurePersuit.Point(PoseOne.x, PoseOne.y, PoseOne.h, 0.5)
+                new PurePersuit.Point(PoseFour.x, PoseFour.y, PoseFour.h, 0),
+                new PurePersuit.Point(PoseThree.x, PoseThree.y, PoseThree.h, 0),
+                new PurePersuit.Point(PoseTwo.x, PoseTwo.y, PoseTwo.h, 0),
+                new PurePersuit.Point(PoseOne.x, PoseOne.y, PoseOne.h, 0)
 
         ));
 
         Scheduler tasks = new Scheduler()
-                .StartPurePersuit(purePersuitPathOne, 0, 800)
+                .waitSeconds(5)
+                .StartPurePersuit(purePersuitPathOne, 0, 750)
                 .addTask(new Task() {
                     @Override
                     protected void Actions() {
@@ -62,7 +66,7 @@ public class TestSwervePurePersuit extends LinearOpMode {
                     }
                 })
                 .waitSeconds(5)
-                .StartPurePersuit(purePersuitPathTwo, 0, 800)
+                .StartPurePersuit(purePersuitPathTwo, 0, 750)
                 .addTask(new Task() {
                     @Override
                     protected void Actions() {
@@ -72,13 +76,12 @@ public class TestSwervePurePersuit extends LinearOpMode {
                     protected boolean Conditions() {
                         return Chassis.IsPositionDone(100);
                     }
-                })
-                .waitSeconds(5);
+                });
 
         Scheduler currenttasks = new Scheduler();
         currenttasks.AddAnotherScheduler(tasks);
         while(opModeInInit()){
-            //Localizer.Reset();
+            Localizer.Reset();
         }
 
 

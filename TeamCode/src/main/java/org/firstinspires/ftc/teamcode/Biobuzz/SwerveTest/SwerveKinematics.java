@@ -210,19 +210,10 @@ public class SwerveKinematics {
     }
 
     public void updatePods(){
-        double FLError = frontLeftModule.getError();
-        double FRError = frontRightModule.getError();
-        double BLError = backLeftModule.getError();
-        double BRError = backRightModule.getError();
-
-        double mult = Math.max(0, Math.cos(Math.toRadians(Math.max(Math.max(FLError,FRError), Math.max(BLError, BRError)))));
-        mult*=1.5;
-        if(mult>0.9) mult = 1;
-
-        frontLeftModule.update(mult);
-        frontRightModule.update(mult);
-        backLeftModule.update(mult);
-        backRightModule.update(mult);
+        frontLeftModule.update(1);
+        frontRightModule.update(1);
+        backLeftModule.update(1);
+        backRightModule.update(1);
 
         /*
         RobotInitializers.Dashtelemetry.addData( "FL amp", frontLeftModule.motor.getCurrent(CurrentUnit.AMPS));

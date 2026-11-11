@@ -27,9 +27,9 @@ public class Chassis {
 
 
 
-    public static PIDController Strafe = new PIDController(-0.007,0,-0.00075),
-            Forward = new PIDController(-0.007,0,-0.00075),
-            Heading = new PIDController(-0.74,0,-0.07);
+    public static PIDController Strafe = new PIDController(-0.004,0,-0.0005),
+            Forward = new PIDController(-0.004,0,-0.0005),
+            Heading = new PIDController(-0.5,0,-0.03);
 
     public static PIDCoefficients NormalStrafe = new PIDCoefficients(-0.007, 0, -0.0075),
             NormalForward = new PIDCoefficients(-0.007, 0, -0.0075),
@@ -112,7 +112,7 @@ public class Chassis {
     }
 
     public static void drive(boolean fc, double x, double y, double z){
-        /*
+
         double mag = Math.hypot(x, y);
         if(mag < 0.05) { x = 0; y = 0; }
         else{
@@ -122,7 +122,7 @@ public class Chassis {
         }
         if(Math.abs(z) < 0.05) z = 0;
         z = z * Math.abs(z);
-        */
+
 
         if(fc){
             kinematics.setFC(x, y, z);
@@ -240,7 +240,7 @@ public class Chassis {
         //RobotInitializers.Dashtelemetry.addData("impotanceOfX",importanceOfX);
         //RobotInitializers.Dashtelemetry.addData("impotanceOfY",importanceOfY);
 
-        kinematics.set(yP * p * importanceOfY, -xP * p * importanceOfX, hP * p);
+        kinematics.set(-xP * p * importanceOfX, -yP * p * importanceOfY, hP * p);
 
 
 

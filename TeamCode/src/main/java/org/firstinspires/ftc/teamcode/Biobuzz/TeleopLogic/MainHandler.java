@@ -7,6 +7,8 @@ import static org.firstinspires.ftc.teamcode.Biobuzz.Teleops.TeleopsStarter.prev
 import static org.firstinspires.ftc.teamcode.Biobuzz.Teleops.TeleopsStarter.prevgm2;
 import static org.firstinspires.ftc.teamcode.Biobuzz.Teleops.TeleopsStarter.storage;
 
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+
 import org.firstinspires.ftc.teamcode.Biobuzz.ActionsCommandLineImplementation.Scheduler;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Chassis;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Localizer;
@@ -59,13 +61,18 @@ public class MainHandler {
         ActionIntake();
 
         if(gm1.cross && gm1.cross != prevgm1.cross){
-            Localizer.Reset();
+            Localizer.setPosition(new SparkFunOTOS.Pose2D(0,0,0));
             Chassis.kinematics.resetHoldHeading();
         }
 
 
         if(prevgm1.square != gm1.square && gm1.square && tasks.IsSchedulerDone()){
             tasks.AddAnotherScheduler(ShootTasks);
+        }
+
+        if(prevgm1.triangle != gm1.triangle && gm1.triangle && tasks.IsSchedulerDone()){
+            Storage.putaBlock = !Storage.putaBlock;
+
         }
         /*
         if(prevgm1.triangle != gm1.triangle && gm1.triangle){

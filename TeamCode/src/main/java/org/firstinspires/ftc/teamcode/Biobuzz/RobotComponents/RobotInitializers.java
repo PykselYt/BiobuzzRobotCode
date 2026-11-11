@@ -168,39 +168,39 @@ public class RobotInitializers {
                 new CRServoImplEx(ServoHub1,1, ServoConfigurationType.getStandardServoType()),
                 new AnalogInput(ControlHubAnalog,0),true);
 
-        SwerveKinematics.backRightModule.SetEncoderOffset(80);
-        SwerveKinematics.backRightModule.bigCoef = new PIDCoefficients(-0.013911, -0.0006935, 0);
-        SwerveKinematics.backRightModule.smallCoef = new PIDCoefficients(-0.033042, -0.0007288, 0);
-        SwerveKinematics.backRightModule.controller.setPDFCoefficients(-0.013911, -0.0006935, 0);
+        SwerveKinematics.backRightModule.SetEncoderOffset(-100);
+        SwerveKinematics.backRightModule.bigCoef = new PIDCoefficients(-0.012191, -0.0004893, 0);
+        SwerveKinematics.backRightModule.smallCoef = new PIDCoefficients(-0.049650, -0.0005559, 0);
+        SwerveKinematics.backRightModule.controller.setPDFCoefficients(-0.012191, -0.0004893, 0);
 
 
         SwerveKinematics.frontRightModule = new SwervePod(new CrServoPlus(ServoHub2,5, Servo.Direction.FORWARD),
                 new CRServoImplEx(ServoHub1,0, ServoConfigurationType.getStandardServoType()),
                 new AnalogInput(ControlHubAnalog,1),true);
 
-        SwerveKinematics.frontRightModule.SetEncoderOffset(-165);
-        SwerveKinematics.frontRightModule.bigCoef = new PIDCoefficients(-0.012119, -0.0002491, 0);
-        SwerveKinematics.frontRightModule.smallCoef = new PIDCoefficients(-0.024703, -0.0003542, 0);
-        SwerveKinematics.frontRightModule.controller.setPDFCoefficients(-0.012119, -0.0002491, 0);
+        SwerveKinematics.frontRightModule.SetEncoderOffset(155);
+        SwerveKinematics.frontRightModule.bigCoef = new PIDCoefficients(-0.015457, -0.0004329, 0);
+        SwerveKinematics.frontRightModule.smallCoef = new PIDCoefficients(-0.031216, -0.0001447, 0);
+        SwerveKinematics.frontRightModule.controller.setPDFCoefficients(-0.015457, -0.0004329, 0);
 
         SwerveKinematics.backLeftModule = new SwervePod(new CrServoPlus(ServoHub2,3, Servo.Direction.FORWARD),
                 new CRServoImplEx(ServoHub2,0, ServoConfigurationType.getStandardServoType()),
                 new AnalogInput(ControlHubAnalog,3),true);
 
-        SwerveKinematics.backLeftModule.SetEncoderOffset(55);
-        SwerveKinematics.backLeftModule.bigCoef = new PIDCoefficients(-0.017070,-0.0006128,0);
-        SwerveKinematics.backLeftModule.smallCoef = new PIDCoefficients(-0.025105,-0.0005812,0);
-        SwerveKinematics.backLeftModule.controller.setPDFCoefficients(-0.017070,-0.0006128,0);
+        SwerveKinematics.backLeftModule.SetEncoderOffset(167);
+        SwerveKinematics.backLeftModule.bigCoef = new PIDCoefficients(-0.018017,-0.0007337,0);
+        SwerveKinematics.backLeftModule.smallCoef = new PIDCoefficients(-0.025105,-0.0007741,0);
+        SwerveKinematics.backLeftModule.controller.setPDFCoefficients(-0.018017,-0.0007337,0);
 
 
         SwerveKinematics.frontLeftModule = new SwervePod(new CrServoPlus(ServoHub2,2, Servo.Direction.FORWARD),
                 new CRServoImplEx(ServoHub2,1, ServoConfigurationType.getStandardServoType()),
                 new AnalogInput(ControlHubAnalog,2),true);
 
-        SwerveKinematics.frontLeftModule.SetEncoderOffset(108);
-        SwerveKinematics.frontLeftModule.bigCoef = new PIDCoefficients(-0.017744, -0.0004858, 0);
-        SwerveKinematics.frontLeftModule.smallCoef = new PIDCoefficients(-0.028317, -0.0004159, 0);
-        SwerveKinematics.frontLeftModule.controller.setPDFCoefficients(-0.017744, -0.0004858, 0);
+        SwerveKinematics.frontLeftModule.SetEncoderOffset(-146);
+        SwerveKinematics.frontLeftModule.bigCoef = new PIDCoefficients(-0.010499, -0.0004717, 0);
+        SwerveKinematics.frontLeftModule.smallCoef = new PIDCoefficients(-0.028317, -0.0004998, 0);
+        SwerveKinematics.frontLeftModule.controller.setPDFCoefficients(-0.010499, -0.0004717, 0);
     }
 
 
@@ -208,7 +208,7 @@ public class RobotInitializers {
         Storage.motorfata = new CachedMotor(ControlHubMotors, 0, DcMotorSimple.Direction.FORWARD);
         Storage.motorspate = new CachedMotor(ControlHubMotors, 1, DcMotorSimple.Direction.FORWARD);
         Storage.ramp = new ServoPlus(ServoHub1, 4);
-        Storage.upPos = 15;
+        Storage.upPos = 50  ;
         Storage.downPos = 270;
         Storage.ramp.setAngle(Storage.upPos);
 
@@ -224,14 +224,18 @@ public class RobotInitializers {
     }
 
     public static void InitializeShooter(){
-        Shooter.Launcher1 = new CachedMotor(ControlHubMotors, 2, DcMotorSimple.Direction.FORWARD);
+        Shooter.Launcher1 = new CachedMotor(ControlHubMotors, 3, DcMotorSimple.Direction.REVERSE);
+        Shooter.Launcher2 = new CachedMotor(ControlHubMotors, 2, DcMotorSimple.Direction.FORWARD);
+        Shooter.FlyWheelEncoder = new CachedMotor(ControlHubMotors, 2, DcMotorSimple.Direction.REVERSE);
+        Shooter.FlyWheelEncoder.ActivateEncoder(28);
+
         Shooter.Pitch = new ServoPlus(ServoHub1, 3, Servo.Direction.FORWARD);
     }
 
     //Intake CHM0 --
     //Storage CHM1 FORWARD
-    //Flywheel1 CHM2 FORWARD
-    //Flywheel2 CHM3 REVERSE
+    //Flywheel2 CHM2 FORWARD
+    //Flywheel1 CHM3 REVERSE
 
     //Pitch SH1 3
     //Turret1 SH1 2

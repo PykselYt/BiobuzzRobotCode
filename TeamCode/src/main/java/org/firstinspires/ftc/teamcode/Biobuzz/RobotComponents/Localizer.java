@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,11 +12,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.PinPoint;
 
 
+@Config
 
 public class Localizer {
 
 
-    public static double X = -118.203, Y = -69.861, yawScalar = 1;//de vazut
+    public static double X = -118.203, Y = -69.861, yawScalar = 0.99953
+            ;//de vazut
     public static PinPoint.EncoderDirection xPod = PinPoint.EncoderDirection.REVERSED, yPod = PinPoint.EncoderDirection.REVERSED;
     public static PinPoint pinPoint;
     private static SparkFunOTOS.Pose2D velocity = new SparkFunOTOS.Pose2D();
