@@ -38,6 +38,9 @@ public class TeleopsStarter {
 
     public static Gamepad prevgm1,prevgm2;
 
+
+    public static boolean prepareShoot;
+
     public TeleopsStarter(HardwareMap hardwareMap, TEAM color){
 
         TeleopsStarter.gm1 = new Gamepad();
@@ -101,9 +104,14 @@ public class TeleopsStarter {
 
 
         Localizer.Update();
-        turret.updateTurret(Localizer.getCurrentPosition());
-        shooter.UpdateTurretAndPitch();
-        shooter.updateFlyWheelSpeed();
+        if(prepareShoot){
+            turret.updateTurret(Localizer.getCurrentPosition());
+            shooter.UpdateTurretAndPitch();
+            shooter.updateFlyWheelSpeed();
+        }
+
+
+
         RobotInitializers.Dashtelemetry.addData("pin freq", Localizer.pinPoint.getFrequency());
 
         prevgm1.copy(gm1);

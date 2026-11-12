@@ -42,7 +42,7 @@ public class Storage {
         }else motorfata.setPower(0);
     }
 
-    public void takeIn(){senzorTakeIn(1);}
+    public void takeIn(){takeIn(1);}
     public void spit(){takeIn(-1);}
     public void stop(){takeIn(0);}
     public void transfer(){takeIn(1);}

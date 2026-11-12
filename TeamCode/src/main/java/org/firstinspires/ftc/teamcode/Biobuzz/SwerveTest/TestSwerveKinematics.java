@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Biobuzz.MathHelpers.MathUtils;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Chassis;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Localizer;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.RobotInitializers;
@@ -20,7 +19,6 @@ public class TestSwerveKinematics extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         RobotInitializers.InitializeFull(hardwareMap);
-        MathUtils.InitializePrecalculation();
 
         SwerveKinematics kinematics = new SwerveKinematics();
 

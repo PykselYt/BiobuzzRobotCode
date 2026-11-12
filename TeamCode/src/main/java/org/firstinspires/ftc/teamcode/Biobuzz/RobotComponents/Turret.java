@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.Biobuzz.MathHelpers.ExtendedMaths;
+
 @Config
 public class Turret {
 
@@ -47,8 +49,8 @@ public class Turret {
 
     public SparkFunOTOS.Pose2D TurretFieldRelativePosition(SparkFunOTOS.Pose2D robotpose){
 
-        double cos = Math.cos(robotpose.h + offsetH);
-        double sin = Math.sin(robotpose.h + offsetH);
+        double cos = ExtendedMaths.fastCos(robotpose.h + offsetH);
+        double sin = ExtendedMaths.fastSin(robotpose.h + offsetH);
 
         double trueOutputBallx = robotpose.x + offsetTurretX * cos - offsetTurretY * sin;
         double trueOutputBally = robotpose.y + offsetTurretX * sin + offsetTurretY * cos;
@@ -109,7 +111,7 @@ public class Turret {
 
 
 
-        double targetGlobalHeading = Math.atan2(dy, dx);
+        double targetGlobalHeading = ExtendedMaths.fastAtan2(dy, dx);
 
         /*double xAdd = radius * Math.cos(targetGlobalHeading);
         double yAdd = radius * Math.sin(targetGlobalHeading);

@@ -29,12 +29,19 @@ public class Shooter {
     }
 
 
+    private static double lastPower = 0;
+
+
     public void setPowerEquilibrated(double power){
         double p = 12.8 / RobotInitializers.VOLTAGE;
         double powercomp = power * p;
         //RobotInitializers.Dashtelemetry.addLine("equilibrated power" + power * p);
-        Launcher1.setPower(powercomp);
-        Launcher2.setPower(powercomp);
+        if(powercomp != lastPower){
+            lastPower = powercomp;
+            Launcher1.setPower(powercomp);
+            Launcher2.setPower(powercomp);
+        }
+
     }
 
 
@@ -47,8 +54,8 @@ public class Shooter {
     private static final PIDCoefficients SOFT_PID =
             new PIDCoefficients(0.0006, 0, 0);
 
+
     public void updateFlyWheelSpeed(){
-        //Launcher1.setPower(0.85);
 
 
         LauncherSpeedController.setPidCoefficients(
