@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.CachedMotor;
 import org.firstinspires.ftc.teamcode.Biobuzz.Wrapers.ServoPlus;
 
+@Config
 public class Storage {
 
     public static CachedMotor motorfata,motorspate;
@@ -12,11 +14,12 @@ public class Storage {
 
     public static DigitalChannel bb1, bb2, bb3, bb4;
 
-    public static double upPos=100, downPos=275;
+    public static double upPos=100, downPos=338;
     private static boolean rampDown = false;
 
     public static boolean putaBlock = true;
-    public static double blockPos = 190;
+    public static double blockPos = 223;
+    public static double transferSpeed = 0.7;
 
     public void takeIn(double power){
         motorfata.setPower(power);

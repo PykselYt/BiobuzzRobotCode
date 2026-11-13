@@ -12,8 +12,9 @@ public class ShooterCalculator {
 
     public static double FlywheelDiameter = 0.076;
 
-    public static double PosMaxPitch = 340, LowestPitch = 58.2;
-    public static double PosMinPitch = 270, HighestPitch = 67;
+    public static double PosMaxPitch = 80, LowestPitch = 65.659;
+    public static double PosMinPitch = 146.7, HighestPitch = 79.4;
+    public static double pitchOffset = 80;
 
     public static double TurretOffsetStatic = 0;
 
@@ -22,7 +23,9 @@ public class ShooterCalculator {
     public static boolean usedPos1 = true;
 
     public double NeededServoPosForPitchGiven(double pitch){
-        double angle = LinearFunction.getOutput(PosMaxPitch,PosMinPitch,LowestPitch,HighestPitch,pitch);
+        //double angle = (1.57621 * Math.pow(10, -7)) * Math.pow(pitch, 4) - 0.0000630077 * Math.pow(pitch, 3) + 0.00725814 * pitch * pitch - 0.0445644 * pitch + 65.659;
+        double angle = 0.0008724202 * pitch * pitch * pitch * pitch  - 0.2466545 * pitch * pitch * pitch + 25.82175 * pitch * pitch - 1179.99294 * pitch + 19761.1581;
+        angle += pitchOffset;
         double lo = Math.min(PosMinPitch, PosMaxPitch);
         double hi = Math.max(PosMinPitch, PosMaxPitch);
         return Math.max(lo, Math.min(angle, hi));
@@ -65,8 +68,8 @@ public class ShooterCalculator {
 
 
     public static double h = 1.27; //0.243
-    public static double alfa = -30;
-    public static double e = 0.765;
+    public static double alfa = 30;
+    public static double e = 0.65;
 
     public static double lastValidRPM = 0;
     public static double MaxFlywheelRPM = 3000;

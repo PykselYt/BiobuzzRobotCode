@@ -47,8 +47,13 @@ public class MainHandler {
                 storage.stop();
             }
             else if(gm1.right_bumper) {
-                if(TeleopsStarter.prepareShoot) TeleopsStarter.speedMult = TeleopsStarter.rotMult = 0.6;
-                storage.takeIn();
+                if(TeleopsStarter.prepareShoot) {
+                    TeleopsStarter.speedMult = TeleopsStarter.rotMult = 0.6;
+                    storage.takeIn(storage.transferSpeed);
+                }else{
+                    storage.takeIn();
+                }
+
             }
             else if(gm1.left_bumper) {
                 if(TeleopsStarter.prepareShoot) TeleopsStarter.speedMult = TeleopsStarter.rotMult = 1;
@@ -80,7 +85,7 @@ public class MainHandler {
                 storage.lockPuta();
                 TeleopsStarter.prepareShoot = false;
                 shooter.Pitch.setAngle(Storage.blockPos);
-                shooter.setPowerEquilibrated(0.6);
+                shooter.setPowerEquilibrated(0.75);
             }else{
                 storage.unlockPuta();
                 TeleopsStarter.prepareShoot = true;

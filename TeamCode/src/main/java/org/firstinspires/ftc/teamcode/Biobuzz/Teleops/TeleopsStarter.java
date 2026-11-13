@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Biobuzz.Teleops;
 
+import static org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Shooter.Pitch;
 import static org.firstinspires.ftc.teamcode.Biobuzz.TeleopLogic.MainHandler.PinpointDown;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Storage;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.Turret;
 import org.firstinspires.ftc.teamcode.Biobuzz.TeleopLogic.MainHandler;
 
+@Config
 public class TeleopsStarter {
 
     public static TEAM team = TEAM.RED;
@@ -68,6 +71,14 @@ public class TeleopsStarter {
 
         mainHandler = new MainHandler();
         team = color;
+        /*
+        TeleopsStarter.speedMult = TeleopsStarter.rotMult = 1;
+        storage.lockPuta();
+        TeleopsStarter.prepareShoot = false;
+        Pitch.setAngle(Storage.blockPos);
+        shooter.setPowerEquilibrated(0.75);
+        */
+
     }
 
 
@@ -89,6 +100,9 @@ public class TeleopsStarter {
     }
 
 
+    public static double setRPM = 1000;
+    public static double setAngle = 67;
+
     public void update() {
 
         RobotInitializers.clearCache(ActivateTelemetry);
@@ -101,13 +115,21 @@ public class TeleopsStarter {
         mainHandler.update();
 
 
+        shooter.LauncherSpeedController.setTargetPosition(setRPM);
 
 
         Localizer.Update();
         if(prepareShoot){
             turret.updateTurret(Localizer.getCurrentPosition());
-            shooter.UpdateTurretAndPitch();
+            //shooter.UpdateTurretAndPitch();
             shooter.updateFlyWheelSpeed();
+        }
+
+        if(!Storage.putaBlock){
+            Pitch.setAngle(shooter.FormulaCalculator.NeededServoPosForPitchGiven(setAngle));
+            //Pitch.setAngle(150);
+        }else{
+            Pitch.setAngle(Storage.blockPos);
         }
 
 

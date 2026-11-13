@@ -45,8 +45,8 @@ public class Shooter {
     }
 
 
-    public static double Fs = 0.177;
-    public static double Kv = 0.00035;
+    public static double Fs = 0.3;
+    public static double Kv = 0.0005;
 
     private static final PIDCoefficients AGGR_PID =
             new PIDCoefficients(0.0015, 0, 0);
@@ -58,8 +58,8 @@ public class Shooter {
     public void updateFlyWheelSpeed(){
 
 
-        LauncherSpeedController.setPidCoefficients(
-                RPMError(200) ? SOFT_PID : AGGR_PID);
+        //LauncherSpeedController.setPidCoefficients(
+        //        RPMError(200) ? SOFT_PID : AGGR_PID);
 
         if(LauncherSpeedController.getTargetPosition() < 500)
         {
