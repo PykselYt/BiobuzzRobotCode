@@ -23,11 +23,14 @@ public class ShooterCalculator {
     public static boolean usedPos1 = true;
 
     public double NeededServoPosForPitchGiven(double pitch){
+        pitch = Math.max(LowestPitch, Math.min(HighestPitch, pitch));
+        RobotInitializers.Dashtelemetry.addData("PitchIn", pitch);
         //double angle = (1.57621 * Math.pow(10, -7)) * Math.pow(pitch, 4) - 0.0000630077 * Math.pow(pitch, 3) + 0.00725814 * pitch * pitch - 0.0445644 * pitch + 65.659;
         double angle = 0.0008724202 * pitch * pitch * pitch * pitch  - 0.2466545 * pitch * pitch * pitch + 25.82175 * pitch * pitch - 1179.99294 * pitch + 19761.1581;
         angle += pitchOffset;
         double lo = Math.min(PosMinPitch, PosMaxPitch);
         double hi = Math.max(PosMinPitch, PosMaxPitch);
+        RobotInitializers.Dashtelemetry.addData("PitchOut", Math.max(lo, Math.min(angle, hi)));
         return Math.max(lo, Math.min(angle, hi));
     }
 
@@ -65,11 +68,12 @@ public class ShooterCalculator {
 
     private static final double g = 9.81;
     public static boolean shouldCompensateHood = false;
+    public static double compensationConst = 0.000011;
 
 
     public static double h = 1.27; //0.243
-    public static double alfa = 30;
-    public static double e = 0.65;
+    public static double alfa = 15;
+    public static double e = 0.68;
 
     public static double lastValidRPM = 0;
     public static double MaxFlywheelRPM = 3000;
@@ -80,13 +84,19 @@ public class ShooterCalculator {
         double dx = Turret.goalPosition.x - pos.x;
         double dy = Turret.goalPosition.y - pos.y;
         double distanceToGoal = Math.hypot(dx, dy) / 1000;
+        RobotInitializers.Dashtelemetry.addData("goalDist", distanceToGoal);
 
         //unghi ideal
         double thetaIdeal = Math.atan((2 * h / distanceToGoal) + Math.tan(Math.toRadians(alfa)));
-
+        RobotInitializers.Dashtelemetry.addData("thetaIdeal", Math.toDegrees(thetaIdeal));
         //clamp hood
+
         double hood_angle = Math.max(Math.toRadians(LowestPitch),
                 Math.min(thetaIdeal, Math.toRadians(HighestPitch)));
+
+        RobotInitializers.Dashtelemetry.addData("clampedTheta", Math.toDegrees(hood_angle));
+
+        //double hood_angle = thetaIdeal;
         boolean hoodAtLimit = hood_angle != thetaIdeal;
 
         //rpm
@@ -106,13 +116,20 @@ public class ShooterCalculator {
 
         //compensare
         double newHood = Math.toDegrees(hood_angle);
+
         if (shouldCompensateHood && canShoot) {
+            newHood += ErrorRPM * compensationConst;
+
+
+            /*
             double measuredRPM = flywheelRPM - ErrorRPM;
             newHood = CompensateHoodForRPM(measuredRPM, flywheelRPM, distanceToGoal, newHood);
             newHood = Math.max(LowestPitch, Math.min(newHood, HighestPitch));
+
+            */
         }
 
-        RobotInitializers.Dashtelemetry.addData("thetaIdeal", Math.toDegrees(thetaIdeal));
+
         RobotInitializers.Dashtelemetry.addData("hoodAtLimit", hoodAtLimit);
         RobotInitializers.Dashtelemetry.addData("canShoot", canShoot);
         RobotInitializers.Dashtelemetry.addData("compensatedCalculatedHood", newHood);

@@ -45,14 +45,14 @@ public class Shooter {
     }
 
 
-    public static double Fs = 0.3;
-    public static double Kv = 0.0005;
+    public static double Fs = 0.13;
+    public static double Kv = 0.000258;
 
     private static final PIDCoefficients AGGR_PID =
-            new PIDCoefficients(0.0015, 0, 0);
+            new PIDCoefficients(0.001, 0, 0);
 
     private static final PIDCoefficients SOFT_PID =
-            new PIDCoefficients(0.0006, 0, 0);
+            new PIDCoefficients(0.0003, 0, 0);
 
 
     public void updateFlyWheelSpeed(){
@@ -60,6 +60,7 @@ public class Shooter {
 
         //LauncherSpeedController.setPidCoefficients(
         //        RPMError(200) ? SOFT_PID : AGGR_PID);
+
 
         if(LauncherSpeedController.getTargetPosition() < 500)
         {
@@ -71,7 +72,6 @@ public class Shooter {
         RobotInitializers.Dashtelemetry.addData("rpm shooter",rpm);
         RobotInitializers.Dashtelemetry.addData("AMP 1",Launcher1.getCurrent(CurrentUnit.AMPS));
         RobotInitializers.Dashtelemetry.addData("AMP 2",Launcher2.getCurrent(CurrentUnit.AMPS));
-
         double LaunchSpeed = LauncherSpeedController.calculatePower(rpm);
         LaunchSpeed += Kv * LauncherSpeedController.getTargetPosition() + Math.signum(LauncherSpeedController.getTargetPosition() - rpm) * Fs;
         setPowerEquilibrated(LaunchSpeed);

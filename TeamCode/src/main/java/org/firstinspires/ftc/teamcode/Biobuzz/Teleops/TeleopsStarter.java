@@ -62,8 +62,6 @@ public class TeleopsStarter {
         shooter = new Shooter();
 
 
-        ShooterCalculator.shouldCompensateHood = true;
-
         ShooterCalculator.TurretOffsetStatic = 0;
 
         storage.lockPuta();
@@ -121,15 +119,8 @@ public class TeleopsStarter {
         Localizer.Update();
         if(prepareShoot){
             turret.updateTurret(Localizer.getCurrentPosition());
-            //shooter.UpdateTurretAndPitch();
+            shooter.UpdateTurretAndPitch();
             shooter.updateFlyWheelSpeed();
-        }
-
-        if(!Storage.putaBlock){
-            Pitch.setAngle(shooter.FormulaCalculator.NeededServoPosForPitchGiven(setAngle));
-            //Pitch.setAngle(150);
-        }else{
-            Pitch.setAngle(Storage.blockPos);
         }
 
 

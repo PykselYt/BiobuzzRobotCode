@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Biobuzz.RobotComponents.RobotInitializers;
@@ -21,27 +22,15 @@ public class PitchServoCalib extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            if(hub == ServoTest.Hubs.ControlHub){
-                RobotInitializers.ControlHubServos.setServoPosition(port, pitch / 355.f);
-            } else if(hub == ServoTest.Hubs.ServoHub1) {
-                RobotInitializers.ServoHub1.setServoPosition(port, pitch / 355.f);
-            } else if(hub == ServoTest.Hubs.ServoHub2){
-                RobotInitializers.ServoHub2.setServoPosition(port, pitch / 355.f);
-            }
-            Dashtelemetry.addData("pitch calc", (1.57621 * Math.pow(10, -7)) * Math.pow(pitch, 4) - 0.0000630077 * Math.pow(pitch, 3) + 0.00725814 * pitch * pitch - 0.0445644 * pitch + 65.659);
-            Dashtelemetry.update();
+            RobotInitializers.ServoHub1.setServoPosition(3, (0.0008724202 * pitch * pitch * pitch * pitch  - 0.2466545 * pitch * pitch * pitch + 25.82175 * pitch * pitch - 1179.99294 * pitch + 19761.1581 + ShooterCalculator.pitchOffset)/355);
+
+            RobotInitializers.Dashtelemetry.addData("pitch calc", (0.0008724202 * pitch * pitch * pitch * pitch  - 0.2466545 * pitch * pitch * pitch + 25.82175 * pitch * pitch - 1179.99294 * pitch + 19761.1581 + ShooterCalculator.pitchOffset));
+            RobotInitializers.Dashtelemetry.update();
             RobotInitializers.clearCache();
 
         }
     }
 
-    public enum Hubs{
-        ControlHub,
-        ServoHub1,
-        ServoHub2
-    }
-    public static ServoTest.Hubs hub = ServoTest.Hubs.ControlHub;
-    public static int port = 0;
     public static double pitch = 0;
 
 

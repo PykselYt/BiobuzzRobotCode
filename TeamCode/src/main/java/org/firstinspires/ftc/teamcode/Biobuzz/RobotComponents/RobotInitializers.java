@@ -226,7 +226,7 @@ public class RobotInitializers {
     public static void InitializeShooter(){
         Shooter.Launcher1 = new CachedMotor(ControlHubMotors, 3, DcMotorSimple.Direction.FORWARD);
         Shooter.Launcher2 = new CachedMotor(ControlHubMotors, 2, DcMotorSimple.Direction.REVERSE);
-        Shooter.FlyWheelEncoder = new CachedMotor(ControlHubMotors, 2, DcMotorSimple.Direction.FORWARD);
+        Shooter.FlyWheelEncoder = new CachedMotor(ControlHubMotors, 2, DcMotorSimple.Direction.REVERSE);
         Shooter.FlyWheelEncoder.ActivateEncoder(28);
 
         Shooter.Pitch = new ServoPlus(ServoHub1, 3, Servo.Direction.FORWARD);

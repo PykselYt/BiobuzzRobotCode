@@ -85,7 +85,7 @@ public class MainHandler {
                 storage.lockPuta();
                 TeleopsStarter.prepareShoot = false;
                 shooter.Pitch.setAngle(Storage.blockPos);
-                shooter.setPowerEquilibrated(0.75);
+                shooter.setPowerEquilibrated(0.6);
             }else{
                 storage.unlockPuta();
                 TeleopsStarter.prepareShoot = true;
