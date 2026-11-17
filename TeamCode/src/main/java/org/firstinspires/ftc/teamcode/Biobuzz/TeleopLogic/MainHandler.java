@@ -41,7 +41,7 @@ public class MainHandler {
         if(gm1.circle && gm1.circle!=prevgm1.circle){
             storage.switchRamp();
         }
-        if(gm1.right_bumper!= prevgm1.right_bumper || gm1.left_bumper!= prevgm1.left_bumper){
+        if(gm1.right_bumper!= prevgm1.right_bumper || gm1.left_bumper!= prevgm1.left_bumper || gm1.triangle != prevgm1.triangle){
             if(gm1.right_bumper && gm1.left_bumper) {
                 if(TeleopsStarter.prepareShoot) TeleopsStarter.speedMult = TeleopsStarter.rotMult = 1;
                 storage.stop();
@@ -54,7 +54,10 @@ public class MainHandler {
                     }
 
                 }else{
-                    storage.takeIn();
+                    if(gm1.triangle){
+                        storage.takeFront();
+                        storage.stopBack();
+                    }else storage.takeIn();
                 }
 
             }

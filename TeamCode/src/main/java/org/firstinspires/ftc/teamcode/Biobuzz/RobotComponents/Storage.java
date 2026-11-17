@@ -37,6 +37,13 @@ public class Storage {
         }
 
     }
+    public void takeFront(){
+        motorfata.setPower(1);
+    }
+    public void stopBack(){
+        motorspate.setPower(0);
+    }
+
 
     public void idle(){
         motorspate.setPower(0);
