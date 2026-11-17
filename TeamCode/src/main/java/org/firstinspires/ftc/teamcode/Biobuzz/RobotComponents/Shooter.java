@@ -33,9 +33,9 @@ public class Shooter {
 
 
     public void setPowerEquilibrated(double power){
-        double p = 12.8 / RobotInitializers.VOLTAGE;
+        double p = 13 / RobotInitializers.VOLTAGE;
         double powercomp = power * p;
-        //RobotInitializers.Dashtelemetry.addLine("equilibrated power" + power * p);
+        RobotInitializers.Dashtelemetry.addLine("equilibrated power" + power * p);
         if(powercomp != lastPower){
             lastPower = powercomp;
             Launcher1.setPower(powercomp);
@@ -45,8 +45,8 @@ public class Shooter {
     }
 
 
-    public static double Fs = 0.13;
-    public static double Kv = 0.000258;
+    public static double Fs = 0.11;
+    public static double Kv = 0.0002615;
 
     private static final PIDCoefficients AGGR_PID =
             new PIDCoefficients(0.001, 0, 0);

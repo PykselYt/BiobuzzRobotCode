@@ -208,8 +208,6 @@ public class RobotInitializers {
         Storage.motorfata = new CachedMotor(ControlHubMotors, 0, DcMotorSimple.Direction.FORWARD);
         Storage.motorspate = new CachedMotor(ControlHubMotors, 1, DcMotorSimple.Direction.FORWARD);
         Storage.ramp = new ServoPlus(ServoHub1, 4);
-        Storage.upPos = 100;
-        Storage.downPos = 330;
         Storage.ramp.setAngle(Storage.upPos);
 
         Storage.bb1 = new DigitalChannelImpl(ControlHubDigital, 1);

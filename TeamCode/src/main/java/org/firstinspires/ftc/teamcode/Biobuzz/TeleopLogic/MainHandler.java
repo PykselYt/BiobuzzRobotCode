@@ -48,8 +48,11 @@ public class MainHandler {
             }
             else if(gm1.right_bumper) {
                 if(TeleopsStarter.prepareShoot) {
-                    TeleopsStarter.speedMult = TeleopsStarter.rotMult = 0.6;
-                    storage.takeIn(storage.transferSpeed);
+                    if(shooter.RPMError() < 100){
+                        TeleopsStarter.speedMult = TeleopsStarter.rotMult = 0.6;
+                        storage.takeIn(storage.transferSpeed);
+                    }
+
                 }else{
                     storage.takeIn();
                 }
