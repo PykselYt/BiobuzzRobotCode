@@ -18,7 +18,7 @@ public class ShooterCalculator {
 
     public static double TurretOffsetStatic = 0;
 
-    public static SparkFunOTOS.Pose2D goalPosition1 = new SparkFunOTOS.Pose2D(1200,-540,0), goalPosition2 = new SparkFunOTOS.Pose2D(2050,-540,0);
+    public static SparkFunOTOS.Pose2D goalPosition1 = new SparkFunOTOS.Pose2D(1200,-500,0), goalPosition2 = new SparkFunOTOS.Pose2D(2050,-540,0);
     public static double halfFieldDist = 1600;
     public static boolean usedPos1 = true;
 
@@ -68,12 +68,12 @@ public class ShooterCalculator {
 
     private static final double g = 9.81;
     public static boolean shouldCompensateHood = false;
-    public static double compensationConst = 0.000011;
+    public static double compensationConst = 0.000013;
 
 
     public static double h = 1.27; //0.243
     public static double alfa = 25;
-    public static double e = 0.66;
+    public static double e = 0.667;
 
     public static double lastValidRPM = 0;
     public static double MaxFlywheelRPM = 3000;

@@ -33,7 +33,7 @@ public class Shooter {
 
 
     public void setPowerEquilibrated(double power){
-        double p = 13 / RobotInitializers.VOLTAGE;
+        double p = 12.9 / RobotInitializers.VOLTAGE;
         double powercomp = power * p;
         RobotInitializers.Dashtelemetry.addLine("equilibrated power" + power * p);
         if(powercomp != lastPower){

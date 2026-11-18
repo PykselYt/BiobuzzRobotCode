@@ -210,11 +210,15 @@ public class RobotInitializers {
         Storage.ramp = new ServoPlus(ServoHub1, 4);
         Storage.ramp.setAngle(Storage.upPos);
 
+
+        /*
         Storage.bb1 = new DigitalChannelImpl(ControlHubDigital, 1);
         Storage.bb2 = new DigitalChannelImpl(ControlHubDigital, 5);
         Storage.bb3 = new DigitalChannelImpl(ControlHubDigital, 3);
         Storage.bb4 = new DigitalChannelImpl(ControlHubDigital, 7);
-    }
+        */
+        }
+
 
     public static void InitializeTurret(){
         Turret.mk21 = new ServoImplEx(ServoHub1, 2,ServoConfigurationType.getStandardServoType());

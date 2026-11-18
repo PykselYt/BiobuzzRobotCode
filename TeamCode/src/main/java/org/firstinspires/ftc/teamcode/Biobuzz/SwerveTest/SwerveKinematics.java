@@ -144,7 +144,8 @@ public class SwerveKinematics {
     public void resetHoldHeading(){targetHeading = 0;}
     public void setFC(double x, double y, double r){
 
-
+        //if(Math.abs(x)>errorTresh || Math.abs(y)>errorTresh || Math.abs(r)>errorTresh) errorMult = false;
+        //else errorMult = true;
 
         double heading = Localizer.getCurrentPosition().h;
 
@@ -208,8 +209,22 @@ public class SwerveKinematics {
         backRightModule.set(toDegrees(wa[2]),ws[2]/diminuator);
         backLeftModule.set(toDegrees(wa[3]),ws[3]/diminuator);
     }
+    public static double errorTresh = 0.9;
+    public static boolean errorMult = false;
 
     public void updatePods(){
+        /*
+        double mult = 1;
+        if(errorMult){
+            double maxErr = Math.max(
+                    Math.max(Math.abs(frontLeftModule.getError()), Math.abs(frontRightModule.getError())),
+                    Math.max(Math.abs(backLeftModule.getError()), Math.abs(backRightModule.getError()))
+            );
+            mult = 1 - Math.min(maxErr/45, 1);
+            if(mult > 0.9) mult = 1;
+        }
+        */
+
         frontLeftModule.update(1);
         frontRightModule.update(1);
         backLeftModule.update(1);

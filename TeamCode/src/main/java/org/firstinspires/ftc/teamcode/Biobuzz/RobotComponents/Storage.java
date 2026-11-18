@@ -14,7 +14,7 @@ public class Storage {
 
     public static DigitalChannel bb1, bb2, bb3, bb4;
 
-    public static double upPos=70, downPos=290;
+    public static double upPos=40, downPos=265;
     private static boolean rampDown = false;
 
     public static boolean putaBlock = true;
@@ -26,17 +26,6 @@ public class Storage {
         motorspate.setPower(power);
     }
 
-    public void senzorTakeIn(double power){
-        if(!check4()) {
-            motorfata.setPower(power);
-            motorspate.setPower(power);
-        }
-        else {
-            motorfata.setPower(0);
-            motorspate.setPower(0);
-        }
-
-    }
     public void takeFront(){
         motorfata.setPower(1);
     }
@@ -47,9 +36,7 @@ public class Storage {
 
     public void idle(){
         motorspate.setPower(0);
-        if(check4()){
-            motorfata.setPower(0);
-        }else motorfata.setPower(0);
+        motorfata.setPower(0);
     }
 
     public void takeIn(){takeIn(1);}
