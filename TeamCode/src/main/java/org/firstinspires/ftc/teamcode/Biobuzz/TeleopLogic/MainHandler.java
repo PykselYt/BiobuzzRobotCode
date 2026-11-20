@@ -54,10 +54,7 @@ public class MainHandler {
                     }
 
                 }else{
-                    if(gm1.triangle){
-                        storage.takeFront();
-                        storage.stopBack();
-                    }else storage.takeIn();
+                    storage.takeIn();
                 }
 
             }
@@ -67,7 +64,7 @@ public class MainHandler {
             }
             else {
                 if(TeleopsStarter.prepareShoot) TeleopsStarter.speedMult = TeleopsStarter.rotMult = 1;
-                storage.idle();
+                storage.stop();
 
             }
         }

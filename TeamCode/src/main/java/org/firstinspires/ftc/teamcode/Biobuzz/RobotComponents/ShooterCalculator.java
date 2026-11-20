@@ -68,7 +68,7 @@ public class ShooterCalculator {
 
     private static final double g = 9.81;
     public static boolean shouldCompensateHood = false;
-    public static double compensationConst = 0.000013;
+    public static double compensationConst = 0.00001 ;
 
 
     public static double h = 1.27; //0.243

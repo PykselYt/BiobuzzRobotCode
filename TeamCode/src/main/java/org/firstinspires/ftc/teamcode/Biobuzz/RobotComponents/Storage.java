@@ -19,30 +19,16 @@ public class Storage {
 
     public static boolean putaBlock = true;
     public static double blockPos = 223;
-    public static double transferSpeed = 1;
+    public static double transferSpeed = 0.9;
 
     public void takeIn(double power){
         motorfata.setPower(power);
         motorspate.setPower(power);
     }
 
-    public void takeFront(){
-        motorfata.setPower(1);
-    }
-    public void stopBack(){
-        motorspate.setPower(0);
-    }
-
-
-    public void idle(){
-        motorspate.setPower(0);
-        motorfata.setPower(0);
-    }
-
     public void takeIn(){takeIn(1);}
     public void spit(){takeIn(-1);}
     public void stop(){takeIn(0);}
-    public void transfer(){takeIn(1);}
 
 
 

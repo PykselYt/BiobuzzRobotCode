@@ -27,7 +27,7 @@ public class ShootAllSequence {
             .addTask(new Task() {
                 @Override
                 protected void Actions() {
-                    storage.transfer();
+                    //storage.transfer();
                 }
 
                 @Override
